@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)file:///C:/Users/UMESH/Downloads/MyHabits%20(1).html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#07070f">
+<title>Manjunath · Daily Habits</title>
+<link href="./index_files/css2" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#07070f;--card:#111120;--card2:#0d0d1a;--border:#1e1e32;
+  --text:#f0eeff;--muted:#55557a;
+  --water:#38bdf8;--ex:#4ade80;--learn:#fbbf24;--med:#a78bfa;--comm:#fb923c;
+  --shake:#f472b6;--soak:#34d399;--breath:#67e8f9;--height:#818cf8;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);}
+body{font-family:'Nunito',sans-serif;color:var(--text);max-width:430px;margin:0 auto;display:flex;flex-direction:column;}
+#app{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:88px;}
+#app::-webkit-scrollbar{display:none;}
+
+/* NAV */
+#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(8,8,18,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;z-index:200;padding-bottom:env(safe-area-inset-bottom,0);}
+.nb{flex:1;background:none;border:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:11px 0 9px;cursor:pointer;font-family:'Nunito',sans-serif;transition:color .2s;}
+.nb.on{color:#a78bfa;}
+.ni{font-size:21px;line-height:1;}
+.nl{font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;}
+
+/* HEADER */
+.hdr{padding:48px 20px 14px;background:linear-gradient(180deg,#0c0c1e,var(--bg));}
+.eyebrow{font-size:11px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:5px;font-weight:800;}
+.pg-title{font-size:26px;font-weight:900;letter-spacing:-.5px;line-height:1.1;}
+
+/* PROGRESS CARD */
+.pcrd{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:16px 18px;display:flex;align-items:center;gap:16px;margin:14px 16px 0;}
+.pmeta{flex:1;}
+.plbl{font-size:12px;color:var(--muted);margin-bottom:3px;font-weight:700;}
+.pnum{font-size:30px;font-weight:900;letter-spacing:-1px;line-height:1;}
+.psub{font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;}
+
+/* WEIGHT CARD */
+.wtcrd{background:linear-gradient(135deg,#1a1a2e,#111120);border:1px solid #4ade8030;border-radius:18px;padding:14px 16px;margin:10px 16px 0;display:flex;align-items:center;gap:14px;}
+.wtbar-wrap{flex:1;}
+.wtbar-top{display:flex;justify-content:space-between;margin-bottom:6px;}
+.wtbar-lbl{font-size:12px;color:var(--muted);font-weight:700;}
+.wtbar-val{font-size:12px;color:#4ade80;font-weight:800;}
+.wtbar-bg{height:8px;background:#1a1a2e;border-radius:4px;overflow:hidden;}
+.wtbar-fill{height:100%;background:linear-gradient(90deg,#4ade80,#fbbf24);border-radius:4px;transition:width .5s ease;}
+
+/* SECTION */
+.sec{padding:0 16px;}
+.stitle{font-size:11px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin:18px 0 10px;font-weight:800;}
+
+/* HABIT CARD */
+.hcrd{background:var(--card);border:2px solid var(--border);border-radius:18px;padding:13px 15px;margin-bottom:9px;display:flex;align-items:center;gap:13px;cursor:pointer;user-select:none;transition:border-color .2s,background .2s;}
+.hcrd.done{border-color:var(--hc);}
+.hico{width:46px;height:46px;border-radius:13px;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:1px solid transparent;transition:all .2s;}
+.hcrd.done .hico{border-color:var(--hc);}
+.hmeta{flex:1;min-width:0;}
+.hname{font-size:15px;font-weight:800;color:#c8c8e8;margin-bottom:2px;}
+.hcrd.done .hname{color:#fff;}
+.hsub{font-size:12px;color:var(--muted);font-weight:600;}
+.hstrk{font-size:11px;color:#fb923c;margin-top:3px;font-weight:700;}
+.hchk{width:28px;height:28px;border-radius:50%;border:2.5px solid #2e2e48;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:14px;font-weight:900;color:#000;}
+.hcrd.done .hchk{background:var(--hc);border-color:var(--hc);}
+.expand-hint{font-size:10px;color:var(--muted);font-weight:800;flex-shrink:0;}
+
+/* EXPAND PANELS */
+.expand-panel{background:var(--card2);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:10px;}
+.panel-hdr{padding:11px 16px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.panel-hdr-lbl{font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:800;}
+.panel-row{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid #1a1a2820;}
+.panel-row:last-child{border-bottom:none;}
+.panel-row-ico{font-size:18px;flex-shrink:0;}
+.panel-row-info{flex:1;}
+.panel-row-title{font-size:13px;font-weight:800;color:#c8c8e8;margin-bottom:2px;}
+.panel-row-sub{font-size:11px;color:var(--muted);font-weight:600;line-height:1.5;}
+.panel-row-badge{font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;display:inline-block;margin-top:3px;}
+.panel-check{width:26px;height:26px;border-radius:8px;border:2px solid #2e2e48;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#000;transition:all .2s;cursor:pointer;}
+.panel-check.done{background:var(--hc2,#67e8f9);border-color:var(--hc2,#67e8f9);}
+.panel-footer{padding:10px 16px;border-top:1px solid var(--border);}
+.panel-footer p{font-size:12px;line-height:1.6;font-weight:600;}
+
+/* WATER SLOTS */
+.wslots{background:var(--card2);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:10px;}
+.wshdr{padding:11px 16px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.wshdrlbl{font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:800;}
+.wslot{display:flex;align-items:center;gap:12px;padding:11px 16px;cursor:pointer;border-bottom:1px solid #1a1a2820;transition:background .15s;}
+.wslot:last-child{border-bottom:none;}
+.wslot.done{background:#38bdf812;}
+.wschk{width:23px;height:23px;border-radius:7px;border:2px solid #2e2e48;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#000;transition:all .2s;}
+.wslot.done .wschk{background:#38bdf8;border-color:#38bdf8;}
+.wsinfo{flex:1;}
+.wstime{font-size:13px;font-weight:800;color:#c8c8e8;margin-bottom:2px;}
+.wslot.done .wstime{color:#38bdf8;}
+.wsnote{font-size:11px;color:var(--muted);font-weight:600;}
+
+/* PILL */
+.pill{display:inline-flex;align-items:center;font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;}
+
+/* RING */
+.wrng-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;}
+.wrng-hint{font-size:9px;color:var(--muted);font-weight:800;}
+
+/* TIP */
+.tip{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:15px 16px;margin-top:8px;}
+.tip-lbl{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;font-weight:800;}
+.tip-txt{font-size:13px;color:#9090b8;line-height:1.75;font-weight:600;}
+
+/* WEEKLY */
+.wkwrap{padding:0 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.wkwrap::-webkit-scrollbar{display:none;}
+.wktbl{border-collapse:separate;border-spacing:4px;min-width:300px;width:100%;}
+.wkgh{font-size:10px;color:var(--muted);text-align:center;padding:4px 0;font-weight:800;text-transform:uppercase;}
+.wkgh.tc{color:#a78bfa;}
+.wkgl{font-size:11px;color:#808098;padding:3px 2px;white-space:nowrap;font-weight:700;}
+.dot{width:29px;height:29px;border-radius:8px;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;border:1.5px solid var(--border);background:var(--card);color:var(--muted);}
+.dot.done{border-color:transparent;color:#000;}
+.dot.fut{opacity:.2;}
+
+/* STREAK GRID */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 16px;}
+.scrd{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:14px;}
+.scrd.on{border-color:var(--hc);}
+.scico{font-size:20px;margin-bottom:5px;}
+.scnm{font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:700;}
+.scval{font-size:26px;font-weight:900;color:#2e2e48;letter-spacing:-1px;}
+.scrd.on .scval{color:#fb923c;}
+.sclbl{font-size:10px;color:var(--muted);font-weight:700;}
+
+/* GUIDE */
+.gstep{display:flex;gap:13px;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:17px;margin:0 16px 9px;}
+.gsico{font-size:24px;flex-shrink:0;margin-top:1px;}
+.gstitle{font-size:15px;font-weight:900;color:var(--text);margin-bottom:4px;}
+.gsbody{font-size:13px;color:#8080a0;line-height:1.65;font-weight:600;}
+.htip{display:flex;gap:12px;padding:13px 15px;border-radius:15px;margin:0 16px 8px;}
+.sched{margin:0 16px 14px;padding:16px;background:var(--card);border:1px solid #a78bfa30;border-radius:17px;}
+.schedt{font-size:14px;font-weight:900;color:#a78bfa;margin-bottom:11px;}
+.srow{display:flex;gap:9px;font-size:13px;color:var(--muted);line-height:2.1;font-weight:600;}
+.srow strong{color:#c8c8e8;font-weight:800;}
+.rules{margin:0 16px 14px;padding:15px;background:var(--card);border:1px solid var(--border);border-radius:16px;}
+.rulest{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:9px;font-weight:800;}
+.rulestxt{font-size:13px;color:#9090b8;line-height:2;font-weight:600;}
+
+/* CELEBRATE */
+#cel{display:none;position:fixed;inset:0;z-index:999;background:#000000dd;flex-direction:column;align-items:center;justify-content:center;gap:13px;}
+#cel.on{display:flex;}
+.celb{font-size:88px;animation:bop .4s ease infinite alternate;}
+.celt{font-size:30px;font-weight:900;}
+.cels{font-size:15px;color:#a78bfa;font-weight:700;}
+.celh{font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;}
+@keyframes bop{from{transform:scale(1) rotate(-4deg);}to{transform:scale(1.2) rotate(4deg);}}
+@keyframes up{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.up{animation:up .3s ease both;}
+svg.svgr{display:block;transform:rotate(-90deg);}
+</style>
+</head>
+<body>
+<div id="app"><div class="hdr up">
+    <p class="eyebrow">Hostel · Student · Mysuru</p>
+    <h1 class="pg-title">Good Evening 🌙, Manjunath! 💪</h1>
+  </div>
+
+  <div class="pcrd up">
+    <div style="position:relative;width:74px;height:74px;flex-shrink:0">
+      <svg width="74" height="74" class="svgr">
+    <circle cx="37" cy="37" r="30" fill="none" stroke="#ffffff08" stroke-width="7"></circle>
+    <circle cx="37" cy="37" r="30" fill="none" stroke="#a78bfa" stroke-width="7" stroke-dasharray="188.50" stroke-dashoffset="188.50" stroke-linecap="round" style="transition:stroke-dashoffset .5s ease"></circle>
+  </svg>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+        <span style="font-size:18px;font-weight:900;color:#a78bfa">0%</span>
+      </div>
+    </div>
+    <div class="pmeta">
+      <p class="plbl">Today's Progress</p>
+      <p class="pnum">0<span style="font-size:17px;color:var(--muted);font-weight:700"> / 10</span></p>
+      <p class="psub">10 habits remaining</p>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:24px">🔥</div>
+      <div style="font-size:14px;font-weight:900;color:#fb923c">0d</div>
+      <div style="font-size:10px;color:var(--muted);font-weight:700">streak</div>
+    </div>
+  </div>
+
+  <!-- WEIGHT -->
+  <div class="wtcrd up">
+    <div style="font-size:32px">⚖️</div>
+    <div class="wtbar-wrap">
+      <div class="wtbar-top">
+        <span class="wtbar-lbl">Weight Goal</span>
+        <span class="wtbar-val">54kg → 60kg</span>
+      </div>
+      <div class="wtbar-bg"><div class="wtbar-fill" style="width:2%"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-top:5px">
+        <span style="font-size:10px;color:var(--muted);font-weight:700">54kg</span>
+        <span style="font-size:11px;color:#4ade80;font-weight:800">6.0kg left 🎯</span>
+        <span style="font-size:10px;color:var(--muted);font-weight:700">60kg</span>
+      </div>
+    </div>
+  </div>
+  <div style="padding:6px 16px 0">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px">
+      <span style="font-size:12px;color:var(--muted);font-weight:700">Update weight:</span>
+      <input type="number" step="0.1" min="54" max="70" value="54" onchange="updateWeight(this.value)" style="background:#1a1a2e;border:1px solid var(--border);border-radius:8px;padding:5px 10px;color:#4ade80;font-size:14px;font-weight:800;width:80px;font-family:&#39;Nunito&#39;,sans-serif;">
+      <span style="font-size:12px;color:var(--muted);font-weight:700">kg</span>
+    </div>
+  </div>
+
+  <div class="sec up"><p class="stitle">Tap any habit to complete ↓</p><div class="hcrd" style="--hc:#34d399" onclick="tapHabit(&#39;soak&#39;)">
+      <div class="hico" style="">  🌊</div>
+      <div class="hmeta">
+        <p class="hname">Soak Badam &amp; Chana</p>
+        <p class="hsub">Every night 9:45pm — overnight</p></div><div class="hchk"></div></div><div class="hcrd" style="--hc:#38bdf8" onclick="tapHabit(&#39;water&#39;)">
+      <div class="hico" style="">  💧</div>
+      <div class="hmeta">
+        <p class="hname">Water Intake</p>
+        <p class="hsub">0ml / 2500ml · 0/9 slots</p></div><span class="expand-hint">▼ OPEN</span></div><div class="hcrd" style="--hc:#67e8f9" onclick="tapHabit(&#39;breathing&#39;)">
+      <div class="hico" style="">  🌬️</div>
+      <div class="hmeta">
+        <p class="hname">Breathing Exercises</p>
+        <p class="hsub">0/4 exercises done</p></div><span class="expand-hint">▼ OPEN</span></div><div class="hcrd" style="--hc:#4ade80" onclick="tapHabit(&#39;run&#39;)">
+      <div class="hico" style="">  🏃</div>
+      <div class="hmeta">
+        <p class="hname">2km Run + Exercise</p>
+        <p class="hsub">6:10am · Breathe 2:2 rhythm</p></div><div class="hchk"></div></div><div class="hcrd" style="--hc:#818cf8" onclick="tapHabit(&#39;height&#39;)">
+      <div class="hico" style="">  📏</div>
+      <div class="hmeta">
+        <p class="hname">Height Exercises</p>
+        <p class="hsub">0/6 exercises done</p></div><span class="expand-hint">▼ OPEN</span></div><div class="hcrd" style="--hc:#f472b6" onclick="tapHabit(&#39;shake&#39;)">
+      <div class="hico" style="">  🥛</div>
+      <div class="hmeta">
+        <p class="hname">Both Shakes Done</p>
+        <p class="hsub"><span style="color:var(--muted)">🌅 Morning ○</span> · <span style="color:var(--muted)">🌙 Evening ○</span></p></div><span class="expand-hint">▼ OPEN</span></div><div class="hcrd" style="--hc:#fbbf24" onclick="tapHabit(&#39;learning&#39;)">
+      <div class="hico" style="">  📖</div>
+      <div class="hmeta">
+        <p class="hname">Learning / Study</p>
+        <p class="hsub">6:10pm + 8:00pm study blocks</p></div><div class="hchk"></div></div><div class="hcrd" style="--hc:#fb923c" onclick="tapHabit(&#39;comm&#39;)">
+      <div class="hico" style="">  🗣️</div>
+      <div class="hmeta">
+        <p class="hname">Communication Upskill</p>
+        <p class="hsub">Read aloud 10 mins · 9:30pm</p></div><div class="hchk"></div></div><div class="hcrd" style="--hc:#a78bfa" onclick="tapHabit(&#39;meditation&#39;)">
+      <div class="hico" style="">  🧘</div>
+      <div class="hmeta">
+        <p class="hname">Meditation + Kapalbhati</p>
+        <p class="hsub">After run · 10 mins focus</p></div><div class="hchk"></div></div><div class="hcrd" style="--hc:#fbbf24" onclick="tapHabit(&#39;goldenmilk&#39;)">
+      <div class="hico" style="">  🌙</div>
+      <div class="hmeta">
+        <p class="hname">Golden Milk Before Sleep</p>
+        <p class="hsub">10:00pm · Warm milk + tuppa</p></div><div class="hchk"></div></div><div class="tip">
+    <p class="tip-lbl">🏆 Coach's Reminder</p>
+    <p class="tip-txt">Your complete daily stack:<br>
+    🌬️ <strong style="color:#67e8f9">Breathe</strong> → 🏃 <strong style="color:#4ade80">Run</strong> → 📏 <strong style="color:#818cf8">Height exercises</strong> → 🥛 <strong style="color:#f472b6">Morning shake</strong> → 📚 College → 🥛 <strong style="color:#f472b6">Evening shake</strong> → 📖 Study → 🌊 <strong style="color:#34d399">Soak badam</strong> → 🌙 <strong style="color:#fbbf24">Golden milk</strong> → 😴 Sleep 10:15pm<br><br>
+    Every single habit has a purpose. Miss one and the chain breaks. Build the chain! 💪</p>
+  </div></div></div>
+<div id="nav">
+  <button class="nb on" id="nb-today" onclick="goTab(&#39;today&#39;)"><span class="ni">⚡</span><span class="nl">Today</span></button>
+  <button class="nb" id="nb-weekly" onclick="goTab(&#39;weekly&#39;)"><span class="ni">📅</span><span class="nl">Weekly</span></button>
+  <button class="nb" id="nb-guide" onclick="goTab(&#39;guide&#39;)"><span class="ni">🗺️</span><span class="nl">Guide</span></button>
+</div>
+<div id="cel" onclick="this.classList.remove(&#39;on&#39;)">
+  <div class="celb">🎉</div>
+  <div class="celt">Perfect Day Bro!</div>
+  <div class="cels">All habits complete 🔥</div>
+  <div class="celh">Tap anywhere to close</div>
+</div>
+<script>
+// ═══ ALL HABITS ════════════════════════════════════════════════════
+const HABITS = [
+  {id:'soak',      label:'Soak Badam & Chana',       sub:'Every night 9:45pm — overnight',      icon:'🌊', color:'#34d399', type:'check'},
+  {id:'water',     label:'Water Intake',              sub:'2.5 litres · 9 slots through day',    icon:'💧', color:'#38bdf8', type:'water'},
+  {id:'breathing', label:'Breathing Exercises',       sub:'6:05am · Anulom Vilom + Kapalbhati',  icon:'🌬️', color:'#67e8f9', type:'expand'},
+  {id:'run',       label:'2km Run + Exercise',        sub:'6:10am · Breathe 2:2 rhythm',         icon:'🏃', color:'#4ade80', type:'check'},
+  {id:'height',    label:'Height Exercises',          sub:'After run · Dead hang + Yoga poses',  icon:'📏', color:'#818cf8', type:'expand'},
+  {id:'shake',     label:'Both Shakes Done',          sub:'7:25am morning · 5:20pm evening',     icon:'🥛', color:'#f472b6', type:'expand'},
+  {id:'learning',  label:'Learning / Study',          sub:'6:10pm + 8:00pm study blocks',        icon:'📖', color:'#fbbf24', type:'check'},
+  {id:'comm',      label:'Communication Upskill',     sub:'Read aloud 10 mins · 9:30pm',         icon:'🗣️', color:'#fb923c', type:'check'},
+  {id:'meditation',label:'Meditation + Kapalbhati',   sub:'After run · 10 mins focus',           icon:'🧘', color:'#a78bfa', type:'check'},
+  {id:'goldenmilk',label:'Golden Milk Before Sleep',  sub:'10:00pm · Warm milk + tuppa',         icon:'🌙', color:'#fbbf24', type:'check'},
+];
+
+// ═══ BREATHING EXERCISES ══════════════════════════════════════════
+const BREATHING = [
+  {id:'b1', icon:'🌀', title:'Anulom Vilom', badge:'10 rounds · 3 mins', color:'#67e8f9',
+   steps:'1. Sit cross-legged on bed\n2. Close RIGHT nostril with thumb\n3. Inhale through LEFT — 4 counts\n4. Close BOTH nostrils — hold 4 counts\n5. Close LEFT — exhale through RIGHT — 4 counts\n6. Repeat other side = 1 round\nDo 10 rounds before running!',
+   benefit:'Clears nasal passage · Balances brain · Reduces anxiety · More oxygen to every cell'},
+  {id:'b2', icon:'💨', title:'Kapalbhati', badge:'3 sets × 30 exhales', color:'#67e8f9',
+   steps:'1. Sit straight — spine erect\n2. Exhale SHARPLY through nose — stomach goes IN\n3. Let inhale happen naturally\n4. Start slow — 30 exhales per set\n5. Rest 30 sec between sets\nBuild to 60/min over weeks!',
+   benefit:'Strongest breathing exercise known · Cleans energy channels · Boosts growth hormone · Improves lung capacity + digestion'},
+  {id:'b3', icon:'📦', title:'Box Breathing (Before Study)', badge:'5 rounds · before study', color:'#67e8f9',
+   steps:'1. Inhale through nose — 4 counts\n2. Hold breath — 4 counts\n3. Exhale through mouth — 4 counts\n4. Hold empty — 4 counts\n= 1 round. Do 5 rounds before sitting to study.',
+   benefit:'Used by Navy SEALs and monks · Activates focus · Reduces stress hormones · Increases concentration 40%'},
+  {id:'b4', icon:'🌙', title:'4-7-8 Sleep Breathing', badge:'4 rounds · at 10:10pm', color:'#67e8f9',
+   steps:'1. Inhale through nose — 4 counts\n2. Hold breath — 7 counts\n3. Exhale slowly through mouth — 8 counts\n= 1 round. Do ONLY 4 rounds.\nDo lying in bed at 10:10pm!',
+   benefit:'Triggers parasympathetic nervous system · Deep sleep within 5 minutes · Muscle recovery improves · Brain consolidates learning overnight'},
+];
+
+// ═══ HEIGHT EXERCISES ═════════════════════════════════════════════
+const HEIGHT_EX = [
+  {id:'h1', icon:'🏋️', title:'Dead Hang', badge:'3 sets × 60 sec', color:'#818cf8',
+   steps:'1. Find any bar — hostel, college, tree branch\n2. Grip with both hands — shoulder width\n3. Hang — RELAX your whole body\n4. Let spine decompress fully\n5. 3 sets of 45–60 seconds\nThis is your MOST IMPORTANT height exercise!',
+   benefit:'Decompresses spine · Can add 1–2cm in 3 months · Strengthens grip and shoulders · Reduces back pain from studying'},
+  {id:'h2', icon:'🧍', title:'Tadasana (Mountain Pose)', badge:'3 × 1 min', color:'#818cf8',
+   steps:'1. Stand straight — feet together\n2. Rise on your toes\n3. Stretch both arms UP — fingers interlocked\n4. Look up slightly\n5. Hold 1 minute — breathe normally\n6. Come down slowly. Repeat 3 times.',
+   benefit:'Full body lengthening · Improves posture · Spine stretches maximally · Instant 1–2cm height from posture alone'},
+  {id:'h3', icon:'🐍', title:'Bhujangasana (Cobra Pose)', badge:'3 × 30 sec', color:'#818cf8',
+   steps:'1. Lie on stomach — palms near chest\n2. Press palms down — lift chest up\n3. Keep hips on floor\n4. Look up — arch spine\n5. Hold 30 seconds — breathe\n6. Come down slowly. Repeat 3 times.',
+   benefit:'Opens vertebrae spacing · Strengthens back muscles · Improves posture · Direct spine lengthening effect'},
+  {id:'h4', icon:'🔄', title:'Chakrasana (Wheel/Bridge Pose)', badge:'3 × 20 sec', color:'#818cf8',
+   steps:'1. Lie on back — bend knees\n2. Place palms near ears — fingers pointing to shoulders\n3. Press up — arch body into wheel/bridge\n4. Hold 20 seconds\n5. Come down slowly. Repeat 3 times.\nIf difficult start with simple bridge pose.',
+   benefit:'Maximum spine extension · Stretches entire front body · Growth plates stimulation · Best pose for height gain'},
+  {id:'h5', icon:'🪢', title:'Spine Twist (Seated)', badge:'30 sec each side', color:'#818cf8',
+   steps:'1. Sit cross-legged\n2. Place right hand on left knee\n3. Twist body to LEFT — look behind\n4. Hold 30 seconds — breathe deeply\n5. Repeat other side\n6. Feel each vertebra rotate.',
+   benefit:'Spaces vertebrae apart · Releases spine compression from sitting · Improves flexibility · Daily college sitting damage reversed'},
+  {id:'h6', icon:'🦘', title:'Skipping Rope', badge:'300 jumps daily', color:'#818cf8',
+   steps:'1. Get simple skipping rope — ₹100 from market\n2. Do 300 jumps after your run\n3. Start with sets of 50 if needed\n4. Build to continuous 300\n5. Breathe rhythmically throughout.',
+   benefit:'Stimulates growth plates still open at 19 · Strengthens calves · Improves bone density · Burns fat while building legs'},
+];
+
+// ═══ SHAKE INGREDIENTS ════════════════════════════════════════════
+const MORNING_SHAKE = [
+  {name:'Full fat milk',         amt:'250ml'},
+  {name:'Banana (ripe)',         amt:'1 large'},
+  {name:'Soaked badam (peeled)', amt:'8 pieces'},
+  {name:'Soaked chana',          amt:'1 tbsp'},
+  {name:'Karjura (no seed)',     amt:'2 pieces'},
+  {name:'Peanut butter',         amt:'1 heaped tsp'},
+  {name:'Homemade tuppa',        amt:'½ tsp'},
+  {name:'Pintolas oats',         amt:'2 tbsp'},
+];
+const EVENING_SHAKE = [
+  {name:'Full fat milk',         amt:'300ml'},
+  {name:'Banana (ripe)',         amt:'1 large'},
+  {name:'Soaked badam (peeled)', amt:'10 pieces'},
+  {name:'Soaked chana',          amt:'2 tbsp'},
+  {name:'Karjura (no seed)',     amt:'3 pieces'},
+  {name:'Godambi (cashews)',     amt:'6 pieces'},
+  {name:'Pista',                 amt:'6 pieces'},
+  {name:'Peanut butter',         amt:'1 heaped tsp'},
+  {name:'Homemade tuppa',        amt:'1 tsp'},
+  {name:'Ashwagandha powder',    amt:'½ tsp'},
+  {name:'Flaxseed powder',       amt:'1 tsp'},
+  {name:'Turmeric',              amt:'1 small pinch'},
+  {name:'Black pepper',          amt:'1 tiny pinch'},
+];
+
+// ═══ WATER SLOTS ══════════════════════════════════════════════════
+const WSLOTS = [
+  {id:'w1', time:'5:55 am',  ml:300, note:'Wake up — FIRST thing before anything!'},
+  {id:'w2', time:'7:25 am',  ml:300, note:'After run — drink before morning shake.'},
+  {id:'w3', time:'7:55 am',  ml:200, note:'Before leaving for college bus.'},
+  {id:'w4', time:'10:30 am', ml:300, note:'College break — carry your bottle!'},
+  {id:'w5', time:'1:00 pm',  ml:250, note:'Before lunch. Seated, slow sips.'},
+  {id:'w6', time:'1:30 pm',  ml:200, note:'After lunch. Wait 45 min gap.'},
+  {id:'w7', time:'6:00 pm',  ml:200, note:'After evening shake and eggs.'},
+  {id:'w8', time:'7:45 pm',  ml:200, note:'During or after hostel dinner.'},
+  {id:'w9', time:'9:55 pm',  ml:300, note:'Last water before sleep. Small sips only.'},
+];
+
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+// ═══ STATE ════════════════════════════════════════════════════════
+let ST = {tab:'today', openPanel:'', checked:{}, water:{}, subChecked:{}, weight:54};
+
+function tk(){return new Date().toISOString().split('T')[0];}
+function save(){try{localStorage.setItem('mhv5',JSON.stringify({c:ST.checked,w:ST.water,sc:ST.subChecked,wt:ST.weight}));}catch(e){}}
+function load(){
+  try{
+    const d=JSON.parse(localStorage.getItem('mhv5')||'{}');
+    ST.checked=d.c||{};ST.water=d.w||{};ST.subChecked=d.sc||{};ST.weight=d.wt||54;
+  }catch(e){}
+}
+
+// ═══ COMPUTED ═════════════════════════════════════════════════════
+function wMl(){return WSLOTS.filter(s=>(ST.water[tk()]||{})[s.id]).reduce((a,s)=>a+s.ml,0);}
+function wCount(){return Object.values(ST.water[tk()]||{}).filter(Boolean).length;}
+function wPct(){return Math.min(100,Math.round(wMl()/25));}
+
+function isBreathDone(){
+  const sc=ST.subChecked[tk()]||{};
+  return BREATHING.every(b=>sc['breath_'+b.id]);
+}
+function isHeightDone(){
+  const sc=ST.subChecked[tk()]||{};
+  return HEIGHT_EX.every(h=>sc['height_'+h.id]);
+}
+function isShakeDone(){
+  const sc=ST.subChecked[tk()]||{};
+  return sc['shake_morning']&&sc['shake_evening'];
+}
+
+function isDone(hid,day){
+  day=day||tk();
+  if(hid==='water') return Object.values(ST.water[day]||{}).filter(Boolean).length>=9;
+  if(hid==='breathing'){const sc=ST.subChecked[day]||{};return BREATHING.every(b=>sc['breath_'+b.id]);}
+  if(hid==='height'){const sc=ST.subChecked[day]||{};return HEIGHT_EX.every(h=>sc['height_'+h.id]);}
+  if(hid==='shake'){const sc=ST.subChecked[day]||{};return sc['shake_morning']&&sc['shake_evening'];}
+  return !!(ST.checked[day]||{})[hid];
+}
+function doneToday(){return HABITS.filter(h=>isDone(h.id)).length;}
+function dayPct(){return Math.round((doneToday()/HABITS.length)*100);}
+function streak(hid){
+  let s=0,d=new Date();d.setDate(d.getDate()-1);
+  for(let i=0;i<365;i++){
+    const k=d.toISOString().split('T')[0];
+    if(isDone(hid,k)){s++;d.setDate(d.getDate()-1);}else break;
+  }return s;
+}
+function avgStreak(){return Math.round(HABITS.reduce((a,h)=>a+streak(h.id),0)/HABITS.length);}
+function weightPct(){return Math.max(0,Math.round(((ST.weight-54)/(60-54))*100));}
+
+// ═══ SVG RING ═════════════════════════════════════════════════════
+function ring(pct,color,sz,sw){
+  sz=sz||72;sw=sw||6;
+  const r=(sz-sw*2)/2,c=2*Math.PI*r,off=c-(pct/100)*c;
+  return `<svg width="${sz}" height="${sz}" class="svgr">
+    <circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="#ffffff08" stroke-width="${sw}"/>
+    <circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${sw}"
+      stroke-dasharray="${c.toFixed(2)}" stroke-dashoffset="${off.toFixed(2)}"
+      stroke-linecap="round" style="transition:stroke-dashoffset .5s ease"/>
+  </svg>`;
+}
+
+// ═══ ACTIONS ══════════════════════════════════════════════════════
+function tapHabit(hid){
+  if(['water','breathing','height','shake'].includes(hid)){
+    ST.openPanel = ST.openPanel===hid ? '' : hid;
+    render();return;
+  }
+  const d=tk();if(!ST.checked[d])ST.checked[d]={};
+  ST.checked[d][hid]=!ST.checked[d][hid];
+  save();render();tryParty();
+}
+function tapSub(key){
+  const d=tk();if(!ST.subChecked[d])ST.subChecked[d]={};
+  ST.subChecked[d][key]=!ST.subChecked[d][key];
+  save();render();tryParty();
+}
+function tapWater(sid){
+  const d=tk();if(!ST.water[d])ST.water[d]={};
+  ST.water[d][sid]=!ST.water[d][sid];
+  save();render();tryParty();
+}
+function updateWeight(val){ST.weight=parseFloat(val)||54;save();render();}
+function tryParty(){
+  if(doneToday()===HABITS.length){
+    document.getElementById('cel').classList.add('on');
+    setTimeout(()=>document.getElementById('cel').classList.remove('on'),4500);
+  }
+}
+function goTab(t){
+  ST.tab=t;ST.openPanel='';
+  ['today','weekly','guide'].forEach(x=>document.getElementById('nb-'+x).classList.toggle('on',x===t));
+  render();document.getElementById('app').scrollTop=0;
+}
+
+// ═══ RENDER ═══════════════════════════════════════════════════════
+function render(){
+  const app=document.getElementById('app');
+  if(ST.tab==='today')  app.innerHTML=renderToday();
+  if(ST.tab==='weekly') app.innerHTML=renderWeekly();
+  if(ST.tab==='guide')  app.innerHTML=renderGuide();
+}
+
+// ─── TODAY ────────────────────────────────────────────────────────
+function renderToday(){
+  const dp=dayPct(),done=doneToday(),as=avgStreak();
+  const hr=new Date().getHours();
+  const gr=hr<9?'Rise & Grind ☀️':hr<12?'Good Morning 🌅':hr<17?'Good Afternoon 🌤️':'Good Evening 🌙';
+
+  let o=`<div class="hdr up">
+    <p class="eyebrow">Hostel · Student · Mysuru</p>
+    <h1 class="pg-title">${gr}, Manjunath! 💪</h1>
+  </div>
+
+  <div class="pcrd up">
+    <div style="position:relative;width:74px;height:74px;flex-shrink:0">
+      ${ring(dp,'#a78bfa',74,7)}
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+        <span style="font-size:18px;font-weight:900;color:#a78bfa">${dp}%</span>
+      </div>
+    </div>
+    <div class="pmeta">
+      <p class="plbl">Today's Progress</p>
+      <p class="pnum">${done}<span style="font-size:17px;color:var(--muted);font-weight:700"> / ${HABITS.length}</span></p>
+      <p class="psub">${done===HABITS.length?'🎉 Perfect day!':HABITS.length-done+' habit'+(HABITS.length-done>1?'s':'')+' remaining'}</p>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:24px">🔥</div>
+      <div style="font-size:14px;font-weight:900;color:#fb923c">${as}d</div>
+      <div style="font-size:10px;color:var(--muted);font-weight:700">streak</div>
+    </div>
+  </div>
+
+  <!-- WEIGHT -->
+  <div class="wtcrd up">
+    <div style="font-size:32px">⚖️</div>
+    <div class="wtbar-wrap">
+      <div class="wtbar-top">
+        <span class="wtbar-lbl">Weight Goal</span>
+        <span class="wtbar-val">${ST.weight}kg → 60kg</span>
+      </div>
+      <div class="wtbar-bg"><div class="wtbar-fill" style="width:${Math.max(2,weightPct())}%"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-top:5px">
+        <span style="font-size:10px;color:var(--muted);font-weight:700">54kg</span>
+        <span style="font-size:11px;color:#4ade80;font-weight:800">${(60-ST.weight).toFixed(1)}kg left 🎯</span>
+        <span style="font-size:10px;color:var(--muted);font-weight:700">60kg</span>
+      </div>
+    </div>
+  </div>
+  <div style="padding:6px 16px 0">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px">
+      <span style="font-size:12px;color:var(--muted);font-weight:700">Update weight:</span>
+      <input type="number" step="0.1" min="54" max="70" value="${ST.weight}" onchange="updateWeight(this.value)"
+        style="background:#1a1a2e;border:1px solid var(--border);border-radius:8px;padding:5px 10px;color:#4ade80;font-size:14px;font-weight:800;width:80px;font-family:'Nunito',sans-serif;"/>
+      <span style="font-size:12px;color:var(--muted);font-weight:700">kg</span>
+    </div>
+  </div>
+
+  <div class="sec up"><p class="stitle">Tap any habit to complete ↓</p>`;
+
+  HABITS.forEach(h=>{
+    const done=isDone(h.id),s=streak(h.id);
+    const isOpen=ST.openPanel===h.id;
+
+    o+=`<div class="hcrd${done?' done':''}" style="--hc:${h.color}" onclick="tapHabit('${h.id}')">
+      <div class="hico" style="${done?`background:${h.color}22;border-color:${h.color}`:''}">  ${h.icon}</div>
+      <div class="hmeta">
+        <p class="hname">${h.label}</p>
+        <p class="hsub">`;
+
+    if(h.id==='water') o+=`${wMl()}ml / 2500ml · ${wCount()}/9 slots`;
+    else if(h.id==='breathing'){
+      const sc=ST.subChecked[tk()]||{};
+      const bdone=BREATHING.filter(b=>sc['breath_'+b.id]).length;
+      o+=`${bdone}/${BREATHING.length} exercises done`;
+    }
+    else if(h.id==='height'){
+      const sc=ST.subChecked[tk()]||{};
+      const hdone=HEIGHT_EX.filter(hx=>sc['height_'+hx.id]).length;
+      o+=`${hdone}/${HEIGHT_EX.length} exercises done`;
+    }
+    else if(h.id==='shake'){
+      const sc=ST.subChecked[tk()]||{};
+      const mDone=!!sc['shake_morning'],eDone=!!sc['shake_evening'];
+      o+=`<span style="color:${mDone?'#f472b6':'var(--muted)'}">🌅 Morning ${mDone?'✓':'○'}</span> · <span style="color:${eDone?'#f472b6':'var(--muted)'}">🌙 Evening ${eDone?'✓':'○'}</span>`;
+    }
+    else o+=h.sub;
+
+    o+=`</p>${s>0?`<p class="hstrk">🔥 ${s} day streak</p>`:''}</div>`;
+
+    if(['water','breathing','height','shake'].includes(h.id)){
+      o+=`<span class="expand-hint">${isOpen?'▲ CLOSE':'▼ OPEN'}</span>`;
+    } else {
+      o+=`<div class="hchk">${done?'✓':''}</div>`;
+    }
+    o+=`</div>`;
+
+    // ── WATER EXPAND
+    if(h.id==='water'&&isOpen){
+      const wd=ST.water[tk()]||{};
+      o+=`<div class="wslots">
+        <div class="wshdr"><span class="wshdrlbl">54kg · 2.5L · 9 Slots</span>
+          <span class="pill" style="background:#38bdf820;color:#38bdf8">${wMl()}ml done</span>
+        </div>`;
+      WSLOTS.forEach(sl=>{
+        const sd=!!wd[sl.id];
+        o+=`<div class="wslot${sd?' done':''}" onclick="event.stopPropagation();tapWater('${sl.id}')">
+          <div class="wschk">${sd?'✓':''}</div>
+          <div class="wsinfo">
+            <div class="wstime">${sl.time}
+              <span class="pill" style="background:#38bdf815;color:#38bdf8;font-size:10px;margin-left:5px">${sl.ml}ml</span>
+            </div>
+            <div class="wsnote">${sl.note}</div>
+          </div>
+        </div>`;
+      });
+      o+=`<div style="padding:10px 16px;border-top:1px solid var(--border);background:#38bdf808">
+        <p style="font-size:12px;color:#38bdf870;font-weight:600">💡 Always <strong style="color:#38bdf8">sit</strong> to drink. Sip slowly. Room temp only. Never gulp standing!</p>
+      </div></div>`;
+    }
+
+    // ── BREATHING EXPAND
+    if(h.id==='breathing'&&isOpen){
+      const sc=ST.subChecked[tk()]||{};
+      o+=`<div class="expand-panel">
+        <div class="panel-hdr"><span class="panel-hdr-lbl">🌬️ Breathing Exercises · 6:05am</span></div>`;
+      BREATHING.forEach(b=>{
+        const bDone=!!sc['breath_'+b.id];
+        o+=`<div class="panel-row">
+          <div class="panel-row-ico">${b.icon}</div>
+          <div class="panel-row-info">
+            <div class="panel-row-title">${b.title}</div>
+            <span class="panel-row-badge" style="background:${b.color}20;color:${b.color}">${b.badge}</span>
+            <div style="font-size:11px;color:var(--muted);margin-top:5px;font-weight:600;white-space:pre-line;line-height:1.6">${b.steps}</div>
+            <div style="font-size:11px;color:#67e8f870;margin-top:4px;font-weight:600">✨ ${b.benefit}</div>
+          </div>
+          <div class="panel-check${bDone?' done':''}" style="--hc2:#67e8f9" onclick="event.stopPropagation();tapSub('breath_${b.id}')">${bDone?'✓':''}</div>
+        </div>`;
+      });
+      o+=`<div class="panel-footer" style="background:#67e8f908">
+        <p style="color:#67e8f870">💡 Do Anulom Vilom + Kapalbhati BEFORE running at 6:05am. Box breathing before study. 4-7-8 at bedtime!</p>
+      </div></div>`;
+    }
+
+    // ── HEIGHT EXPAND
+    if(h.id==='height'&&isOpen){
+      const sc=ST.subChecked[tk()]||{};
+      o+=`<div class="expand-panel">
+        <div class="panel-hdr"><span class="panel-hdr-lbl">📏 Height Exercises · After Run</span>
+          <span class="pill" style="background:#818cf820;color:#818cf8">+5–9cm possible</span>
+        </div>`;
+      HEIGHT_EX.forEach(hx=>{
+        const hDone=!!sc['height_'+hx.id];
+        o+=`<div class="panel-row">
+          <div class="panel-row-ico">${hx.icon}</div>
+          <div class="panel-row-info">
+            <div class="panel-row-title">${hx.title}</div>
+            <span class="panel-row-badge" style="background:${hx.color}20;color:${hx.color}">${hx.badge}</span>
+            <div style="font-size:11px;color:var(--muted);margin-top:5px;font-weight:600;white-space:pre-line;line-height:1.6">${hx.steps}</div>
+            <div style="font-size:11px;color:#818cf870;margin-top:4px;font-weight:600">✨ ${hx.benefit}</div>
+          </div>
+          <div class="panel-check${hDone?' done':''}" style="--hc2:#818cf8" onclick="event.stopPropagation();tapSub('height_${hx.id}')">${hDone?'✓':''}</div>
+        </div>`;
+      });
+      o+=`<div class="panel-footer" style="background:#818cf808">
+        <p style="color:#818cf870">💡 Dead hang is the MOST important. Do it daily without fail. Buy ₹100 skipping rope from market this week. Consistency for 6 months = real results!</p>
+      </div></div>`;
+    }
+
+    // ── SHAKE EXPAND
+    if(h.id==='shake'&&isOpen){
+      const sc=ST.subChecked[tk()]||{};
+      const mDone=!!sc['shake_morning'],eDone=!!sc['shake_evening'];
+      o+=`<div class="expand-panel">
+        <div class="panel-hdr">
+          <span class="panel-hdr-lbl">🌅 Morning Shake · 7:25am · 520 cal</span>
+          <div class="panel-check${mDone?' done':''}" style="--hc2:#f472b6;border-radius:50%" onclick="event.stopPropagation();tapSub('shake_morning')">${mDone?'✓':''}</div>
+        </div>`;
+      MORNING_SHAKE.forEach(i=>{
+        o+=`<div class="panel-row"><span style="font-size:13px;font-weight:700;color:#c8c8e8;flex:1">${i.name}</span><span style="font-size:12px;color:var(--muted);font-weight:600">${i.amt}</span></div>`;
+      });
+      o+=`<div class="panel-hdr" style="border-top:1px solid var(--border)">
+          <span class="panel-hdr-lbl">🌙 Evening Shake · 5:20pm · 750 cal</span>
+          <div class="panel-check${eDone?' done':''}" style="--hc2:#f472b6;border-radius:50%" onclick="event.stopPropagation();tapSub('shake_evening')">${eDone?'✓':''}</div>
+        </div>`;
+      EVENING_SHAKE.forEach(i=>{
+        o+=`<div class="panel-row"><span style="font-size:13px;font-weight:700;color:#c8c8e8;flex:1">${i.name}</span><span style="font-size:12px;color:var(--muted);font-weight:600">${i.amt}</span></div>`;
+      });
+      o+=`<div class="panel-footer" style="background:#f472b608">
+        <p style="color:#f472b870">💡 Blend 45–60 sec · Drink sitting · Sip 8–10 mins · Wait 20 mins before eggs · Room temp milk only · Never cold!</p>
+      </div></div>`;
+    }
+  });
+
+  o+=`<div class="tip">
+    <p class="tip-lbl">🏆 Coach's Reminder</p>
+    <p class="tip-txt">Your complete daily stack:<br>
+    🌬️ <strong style="color:#67e8f9">Breathe</strong> → 🏃 <strong style="color:#4ade80">Run</strong> → 📏 <strong style="color:#818cf8">Height exercises</strong> → 🥛 <strong style="color:#f472b6">Morning shake</strong> → 📚 College → 🥛 <strong style="color:#f472b6">Evening shake</strong> → 📖 Study → 🌊 <strong style="color:#34d399">Soak badam</strong> → 🌙 <strong style="color:#fbbf24">Golden milk</strong> → 😴 Sleep 10:15pm<br><br>
+    Every single habit has a purpose. Miss one and the chain breaks. Build the chain! 💪</p>
+  </div></div>`;
+
+  return o;
+}
+
+// ─── WEEKLY ───────────────────────────────────────────────────────
+function renderWeekly(){
+  const today=new Date(),dayN=today.getDay(),todayStr=tk();
+  const week=Array.from({length:7},(_,i)=>{const d=new Date(today);d.setDate(today.getDate()-dayN+i);return d;});
+
+  let o=`<div class="hdr up"><p class="eyebrow">This Week</p><h1 class="pg-title">Weekly Grid 📅</h1></div>
+  <div class="wkwrap up"><table class="wktbl"><thead><tr><td style="width:75px"></td>`;
+  week.forEach(d=>{
+    const isT=d.toISOString().split('T')[0]===todayStr;
+    o+=`<td class="wkgh${isT?' tc':''}">${DAYS[d.getDay()]}<br>${d.getDate()}</td>`;
+  });
+  o+=`</tr></thead><tbody>`;
+  HABITS.forEach(h=>{
+    o+=`<tr><td class="wkgl">${h.icon} ${h.label.split(' ')[0]}</td>`;
+    week.forEach(d=>{
+      const dk=d.toISOString().split('T')[0],fut=dk>todayStr,done=isDone(h.id,dk);
+      o+=`<td style="text-align:center"><div class="dot${done?' done':''}${fut?' fut':''}" style="${done?`background:${h.color}`:''}">
+        ${done?'✓':fut?'':'·'}</div></td>`;
+    });
+    o+=`</tr>`;
+  });
+  o+=`</tbody></table></div>
+
+  <div style="margin:16px 16px 0;background:var(--card);border:1px solid #4ade8030;border-radius:18px;padding:16px;">
+    <p style="font-size:13px;font-weight:800;color:#4ade80;margin-bottom:12px">⚖️ Weight Journey · 54kg → 60kg</p>
+    <div style="height:10px;background:#1a1a2e;border-radius:5px;overflow:hidden;margin-bottom:12px">
+      <div style="height:100%;width:${Math.max(2,weightPct())}%;background:linear-gradient(90deg,#4ade80,#fbbf24);border-radius:5px"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      <div style="background:#1a1a2e;border-radius:10px;padding:10px;text-align:center">
+        <div style="font-size:18px;font-weight:900;color:#4ade80">${ST.weight}kg</div>
+        <div style="font-size:10px;color:var(--muted);font-weight:700">Current</div>
+      </div>
+      <div style="background:#1a1a2e;border-radius:10px;padding:10px;text-align:center">
+        <div style="font-size:18px;font-weight:900;color:#fbbf24">${(60-ST.weight).toFixed(1)}kg</div>
+        <div style="font-size:10px;color:var(--muted);font-weight:700">To Go</div>
+      </div>
+      <div style="background:#1a1a2e;border-radius:10px;padding:10px;text-align:center">
+        <div style="font-size:18px;font-weight:900;color:#a78bfa">${Math.ceil((60-ST.weight)/1.5)}</div>
+        <div style="font-size:10px;color:var(--muted);font-weight:700">Weeks Est.</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="stitle" style="padding:0 16px;margin-top:20px">Habit Streaks 🔥</p>
+  <div class="sgrid up">`;
+  HABITS.forEach(h=>{
+    const s=streak(h.id);
+    o+=`<div class="scrd${s>0?' on':''}" style="--hc:${h.color}">
+      <div class="scico">${h.icon}</div>
+      <div class="scnm">${h.label.split(' ')[0]}</div>
+      <div class="scval">${s>0?'🔥 '+s:'—'}</div>
+      <div class="sclbl">day streak</div>
+    </div>`;
+  });
+  o+=`</div>`;
+  return o;
+}
+
+// ─── GUIDE ────────────────────────────────────────────────────────
+function renderGuide(){
+  let o=`<div class="hdr up"><p class="eyebrow">How To Use</p><h1 class="pg-title">Full Guide 🗺️</h1>
+    <p style="font-size:13px;color:var(--muted);margin-top:8px;line-height:1.7;font-weight:600">Everything about your tracker in one place!</p>
+  </div>
+
+  <p class="stitle" style="padding:0 16px">How It Works</p>`;
+
+  const steps=[
+    {e:'⚡',t:'TODAY tab — your daily dashboard',b:'Open every morning at 5:55am. Tick each habit as you complete it. Expandable habits (🌬️ Breathing, 📏 Height, 🥛 Shake, 💧 Water) show step-by-step guides inside!'},
+    {e:'🌬️',t:'Breathing card expands with 4 exercises',b:'Tap Breathing card → see Anulom Vilom, Kapalbhati, Box Breathing, and 4-7-8 Sleep Breathing with exact step-by-step instructions. Tick each one done!'},
+    {e:'📏',t:'Height card has 6 exercises with steps',b:'Tap Height card → Dead Hang, Tadasana, Bhujangasana, Chakrasana, Spine Twist, Skipping — all with exact how-to steps. Tick each done!'},
+    {e:'🥛',t:'Shake card shows both recipes',b:'Tap Shake card → see full morning AND evening shake ingredient lists. Tick morning at 7:25am and evening at 5:20pm separately!'},
+    {e:'💧',t:'Water shows your 9 time slots',b:'Tap Water → see all 9 slots with your real timings. Tick each as you drink through the day. Ring shows % of 2.5L goal!'},
+    {e:'⚖️',t:'Update weight every Monday',b:'Find the weight bar on TODAY tab. Type your current weight every Monday morning after waking. Watch 54→60kg bar fill up week by week!'},
+    {e:'🔥',t:'Streaks and Weekly grid',b:'Check 📅 WEEKLY tab to see full week colour grid and each habit\'s current streak. Keep the chain alive — never miss a day!'},
+  ];
+  steps.forEach(s=>{
+    o+=`<div class="gstep up"><div class="gsico">${s.e}</div>
+      <div><p class="gstitle">${s.t}</p><p class="gsbody">${s.b}</p></div></div>`;
+  });
+
+  o+=`<div class="sched up">
+    <p class="schedt">⏰ Your Real Daily Schedule · Hostel · Mysuru</p>
+    <div class="srow">🌅<div><strong>5:55 am</strong> — Wake · 300ml water immediately</div></div>
+    <div class="srow">🌬️<div><strong>6:05 am</strong> — Anulom Vilom 10 rounds · Kapalbhati 3×30</div></div>
+    <div class="srow">🏃<div><strong>6:10 am</strong> — 2km run · breathe 2:2 rhythm</div></div>
+    <div class="srow">📏<div><strong>7:10 am</strong> — Dead hang 3×60sec · Tadasana · Bhujangasana · Chakrasana</div></div>
+    <div class="srow">🧘<div><strong>7:20 am</strong> — 10 min meditation · focus on breath</div></div>
+    <div class="srow">🥛<div><strong>7:25 am</strong> — Morning shake immediately · anabolic window!</div></div>
+    <div class="srow">🍳<div><strong>7:45 am</strong> — Breakfast · oats in milk · chew slowly!</div></div>
+    <div class="srow">🚌<div><strong>8:05 am</strong> — College bus · review notes</div></div>
+    <div class="srow">📚<div><strong>8:30–4:00 pm</strong> — College · 3 sessions</div></div>
+    <div class="srow">🥛<div><strong>5:20 pm</strong> — Evening shake · right after reaching hostel!</div></div>
+    <div class="srow">🥚<div><strong>5:45 pm</strong> — 3 boiled eggs · 20 min after shake</div></div>
+    <div class="srow">📦<div><strong>6:05 pm</strong> — Box breathing 5 rounds · then study</div></div>
+    <div class="srow">📖<div><strong>6:10–7:00 pm</strong> — Study block 1 · hardest subject</div></div>
+    <div class="srow">🍽️<div><strong>7:00–8:00 pm</strong> — Hostel dinner · eat slowly</div></div>
+    <div class="srow">📖<div><strong>8:00–10:00 pm</strong> — Study block 2 · revision</div></div>
+    <div class="srow">🗣️<div><strong>9:30 pm</strong> — Read aloud 10 mins · communication</div></div>
+    <div class="srow">🌊<div><strong>9:45 pm</strong> — Soak 18 badam + 3 tbsp chana in water!</div></div>
+    <div class="srow">🌙<div><strong>10:00 pm</strong> — 4-7-8 breathing · then golden milk</div></div>
+    <div class="srow">😴<div><strong>10:15 pm</strong> — Sleep · non negotiable!</div></div>
+  </div>
+
+  <div class="rules up" style="border-color:#67e8f930">
+    <p class="rulest" style="color:#67e8f9">🌬️ Breathing Summary</p>
+    <p class="rulestxt">
+      🌀 <strong style="color:#67e8f9">Anulom Vilom</strong> — 10 rounds at 6:05am before run<br>
+      💨 <strong style="color:#67e8f9">Kapalbhati</strong> — 3×30 exhales after Anulom Vilom<br>
+      🏃 <strong style="color:#67e8f9">Running breath</strong> — 2 steps inhale · 2 steps exhale<br>
+      📦 <strong style="color:#67e8f9">Box breathing</strong> — 5 rounds before every study session<br>
+      🌙 <strong style="color:#67e8f9">4-7-8 breathing</strong> — 4 rounds at 10:10pm in bed · sleep in 5 mins!
+    </p>
+  </div>
+
+  <div class="rules up" style="border-color:#818cf830">
+    <p class="rulest" style="color:#818cf8">📏 Height Summary · 162cm target 167–171cm</p>
+    <p class="rulestxt">
+      🏋️ <strong style="color:#818cf8">Dead Hang</strong> — 3×60sec DAILY · most important!<br>
+      🧍 <strong style="color:#818cf8">Tadasana</strong> — 3×1min daily after hang<br>
+      🐍 <strong style="color:#818cf8">Bhujangasana</strong> — 3×30sec daily<br>
+      🔄 <strong style="color:#818cf8">Chakrasana</strong> — 3×20sec daily<br>
+      🦘 <strong style="color:#818cf8">Skipping</strong> — 300 jumps daily · buy ₹100 rope!<br>
+      😴 <strong style="color:#818cf8">Sleep 10:15pm</strong> — 90% growth hormone releases 10pm–2am!
+    </p>
+  </div>
+
+  <div class="rules up" style="border-color:#f472b630;margin-bottom:20px">
+    <p class="rulest" style="color:#f472b6">🥛 Shake Rules</p>
+    <p class="rulestxt">
+      ✅ Soak badam + chana <strong style="color:#f472b6">overnight</strong> — 1 min = useless!<br>
+      ✅ Peel badam skin after soaking<br>
+      ✅ Room temperature milk — never cold!<br>
+      ✅ Blend 45–60 seconds until smooth<br>
+      ✅ Drink slowly sitting down — 8 to 10 mins<br>
+      ✅ Wait <strong style="color:#f472b6">20 mins</strong> after shake then eat eggs<br>
+      ❌ Never add sugar · Never add ice
+    </p>
+  </div>`;
+
+  return o;
+}
+
+// ═══ BOOT ═════════════════════════════════════════════════════════
+load();render();
+</script>
+
+
+</body></html>
