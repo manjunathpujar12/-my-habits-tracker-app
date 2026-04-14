@@ -1,183 +1,1373 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
-<meta name="mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="theme-color" content="#07070f"/>
-<title>Manjunath · Daily Habits</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-:root{--bg:#07070f;--card:#111120;--card2:#0d0d1a;--border:#1e1e32;--text:#f0eeff;--muted:#55557a;}
-html,body{height:100%;overflow:hidden;background:var(--bg);}
-body{font-family:'Nunito',sans-serif;color:var(--text);max-width:430px;margin:0 auto;display:flex;flex-direction:column;}
-#app{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:88px;}
-#app::-webkit-scrollbar{display:none;}
- 
-/* NAV */
-#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(8,8,18,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;z-index:200;padding-bottom:env(safe-area-inset-bottom,0);}
-.nb{flex:1;background:none;border:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:11px 0 9px;cursor:pointer;font-family:'Nunito',sans-serif;transition:color .2s;}
-.nb.on{color:#a78bfa;}
-.ni{font-size:21px;line-height:1;}
-.nl{font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;}
- 
-/* HEADER */
-.hdr{padding:48px 20px 14px;background:linear-gradient(180deg,#0c0c1e,var(--bg));}
-.eyebrow{font-size:11px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:5px;font-weight:800;}
-.pg-title{font-size:26px;font-weight:900;letter-spacing:-.5px;line-height:1.1;}
- 
-/* KDB QUOTE */
-.kdb-quote{background:linear-gradient(135deg,#1a1a2e,#0d0d1a);border:1px solid #a78bfa30;border-radius:14px;padding:12px 16px;margin:10px 16px 0;position:relative;overflow:hidden;}
-.kdb-quote::before{content:'"';position:absolute;top:-10px;left:10px;font-size:80px;color:#a78bfa15;font-family:Georgia,serif;line-height:1;}
-.kdb-quote-text{font-size:13px;font-weight:800;color:#c8c8e8;line-height:1.5;font-style:italic;position:relative;z-index:1;}
-.kdb-quote-by{font-size:11px;color:#a78bfa;font-weight:700;margin-top:5px;letter-spacing:.05em;}
- 
-/* PROGRESS CARD */
-.pcrd{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:16px 18px;display:flex;align-items:center;gap:16px;margin:10px 16px 0;}
-.pmeta{flex:1;}
-.plbl{font-size:12px;color:var(--muted);margin-bottom:3px;font-weight:700;}
-.pnum{font-size:30px;font-weight:900;letter-spacing:-1px;line-height:1;}
-.psub{font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;}
- 
-/* WEIGHT */
-.wtcrd{background:linear-gradient(135deg,#1a1a2e,#111120);border:1px solid #4ade8030;border-radius:18px;padding:14px 16px;margin:10px 16px 0;display:flex;align-items:center;gap:14px;}
-.wtbar-wrap{flex:1;}
-.wtbar-bg{height:8px;background:#1a1a2e;border-radius:4px;overflow:hidden;margin:6px 0;}
-.wtbar-fill{height:100%;background:linear-gradient(90deg,#4ade80,#fbbf24);border-radius:4px;transition:width .5s ease;}
- 
-/* SECTION */
-.sec{padding:0 16px;}
-.stitle-row{display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px;}
-.stitle{font-size:11px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;font-weight:800;}
- 
-/* HABIT CARD */
-.hcrd{background:var(--card);border:2px solid var(--border);border-radius:18px;padding:13px 15px;margin-bottom:9px;display:flex;align-items:center;gap:13px;cursor:pointer;user-select:none;transition:border-color .2s,background .2s;}
-.hcrd.done{border-color:var(--hc);}
-.hico{width:46px;height:46px;border-radius:13px;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:1px solid transparent;transition:all .2s;}
-.hcrd.done .hico{border-color:var(--hc);}
-.hmeta{flex:1;min-width:0;}
-.hname{font-size:15px;font-weight:800;color:#c8c8e8;margin-bottom:2px;}
-.hcrd.done .hname{color:#fff;}
-.hsub{font-size:12px;color:var(--muted);font-weight:600;}
-.hstrk{font-size:11px;color:#fb923c;margin-top:3px;font-weight:700;}
-.hchk{width:28px;height:28px;border-radius:50%;border:2.5px solid #2e2e48;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:14px;font-weight:900;color:#000;}
-.hcrd.done .hchk{background:var(--hc);border-color:var(--hc);}
-.expand-hint{font-size:10px;color:var(--muted);font-weight:800;flex-shrink:0;}
- 
-/* EXPAND PANELS */
-.expand-panel{background:var(--card2);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:10px;}
-.panel-hdr{padding:11px 16px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
-.panel-hdr-lbl{font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:800;}
-.panel-row{display:flex;align-items:flex-start;gap:10px;padding:11px 16px;border-bottom:1px solid #1a1a2820;}
-.panel-row:last-child{border-bottom:none;}
-.panel-chk{width:26px;height:26px;border-radius:8px;border:2px solid #2e2e48;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#000;transition:all .2s;cursor:pointer;margin-top:2px;}
-.panel-chk.done{background:var(--hc2);border-color:var(--hc2);}
-.pill{display:inline-flex;align-items:center;font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;}
- 
-/* WATER SLOTS */
-.wslots{background:var(--card2);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:10px;}
-.wslot{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #1a1a2820;transition:background .15s;}
-.wslot:last-child{border-bottom:none;}
-.wslot.done{background:#38bdf812;}
-.wschk{width:23px;height:23px;border-radius:7px;border:2px solid #2e2e48;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#000;transition:all .2s;cursor:pointer;}
-.wslot.done .wschk{background:#38bdf8;border-color:#38bdf8;}
-.wsinfo{flex:1;}
-.wstime{font-size:13px;font-weight:800;color:#c8c8e8;margin-bottom:1px;}
-.wslot.done .wstime{color:#38bdf8;}
-.wsnote{font-size:11px;color:var(--muted);font-weight:600;}
-.wdel{width:28px;height:28px;border-radius:8px;background:#ff4d4d15;border:1px solid #ff4d4d30;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:14px;transition:all .2s;}
-.wdel:active{background:#ff4d4d30;}
- 
-/* ADD WATER FORM */
-.wadd-form{padding:12px 14px;border-top:1px solid var(--border);background:#38bdf808;}
-.wadd-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
-.wadd-input{background:#0d0d1a;border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--text);font-size:13px;font-weight:700;font-family:'Nunito',sans-serif;flex:1;outline:none;}
-.wadd-input:focus{border-color:#38bdf8;}
-.wadd-btn{background:#38bdf8;border:none;border-radius:10px;padding:8px 14px;color:#000;font-size:13px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap;}
-.wadd-hint{font-size:11px;color:#38bdf870;font-weight:600;line-height:1.5;}
- 
-/* WEEKLY */
-.wkwrap{padding:0 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
-.wkwrap::-webkit-scrollbar{display:none;}
-.wktbl{border-collapse:separate;border-spacing:4px;min-width:300px;width:100%;}
-.wkgh{font-size:10px;color:var(--muted);text-align:center;padding:4px 0;font-weight:800;text-transform:uppercase;}
-.wkgh.tc{color:#a78bfa;}
-.wkgl{font-size:11px;color:#808098;padding:3px 2px;white-space:nowrap;font-weight:700;}
-.dot{width:29px;height:29px;border-radius:8px;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;border:1.5px solid var(--border);background:var(--card);color:var(--muted);}
-.dot.done{border-color:transparent;color:#000;}
-.dot.fut{opacity:.2;}
-.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 16px;}
-.scrd{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:14px;}
-.scrd.on{border-color:var(--hc);}
-.scico{font-size:20px;margin-bottom:5px;}
-.scnm{font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:700;}
-.scval{font-size:26px;font-weight:900;color:#2e2e48;letter-spacing:-1px;}
-.scrd.on .scval{color:#fb923c;}
-.sclbl{font-size:10px;color:var(--muted);font-weight:700;}
- 
-/* GUIDE */
-.gstep{display:flex;gap:13px;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:17px;margin:0 16px 9px;}
-.gsico{font-size:24px;flex-shrink:0;margin-top:1px;}
-.gstitle{font-size:15px;font-weight:900;color:var(--text);margin-bottom:4px;}
-.gsbody{font-size:13px;color:#8080a0;line-height:1.65;font-weight:600;}
-.sched{margin:0 16px 14px;padding:16px;background:var(--card);border:1px solid #a78bfa30;border-radius:17px;}
-.schedt{font-size:14px;font-weight:900;color:#a78bfa;margin-bottom:11px;}
-.srow{display:flex;gap:9px;font-size:13px;color:var(--muted);line-height:2.1;font-weight:600;}
-.srow strong{color:#c8c8e8;font-weight:800;}
-.rules{margin:0 16px 14px;padding:15px;background:var(--card);border:1px solid var(--border);border-radius:16px;}
-.rulest{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:9px;font-weight:800;}
-.rulestxt{font-size:13px;color:#9090b8;line-height:2;font-weight:600;}
- 
-/* TIP */
-.tip{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:15px 16px;margin-top:8px;}
-.tip-lbl{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;font-weight:800;}
-.tip-txt{font-size:13px;color:#9090b8;line-height:1.75;font-weight:600;}
- 
-/* MODAL */
-#modal-bg{display:none;position:fixed;inset:0;background:#000000cc;z-index:500;align-items:flex-end;justify-content:center;}
-#modal-bg.on{display:flex;}
-#modal{background:#111120;border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:430px;border-top:1px solid var(--border);}
-#modal h3{font-size:18px;font-weight:900;margin-bottom:16px;}
-#modal input,#modal select{background:#0d0d1a;border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:14px;font-weight:700;font-family:'Nunito',sans-serif;width:100%;outline:none;margin-bottom:10px;}
-#modal input:focus,#modal select:focus{border-color:#a78bfa;}
-.modal-row{display:flex;gap:8px;margin-bottom:10px;}
-.modal-row input{margin-bottom:0;}
-#modal-save{background:#a78bfa;border:none;border-radius:12px;padding:14px;color:#000;font-size:15px;font-weight:900;cursor:pointer;width:100%;font-family:'Nunito',sans-serif;margin-top:4px;}
-#modal-cancel{background:transparent;border:1px solid var(--border);border-radius:12px;padding:12px;color:var(--muted);font-size:14px;font-weight:700;cursor:pointer;width:100%;font-family:'Nunito',sans-serif;margin-top:8px;}
- 
-/* CELEBRATE */
-#cel{display:none;position:fixed;inset:0;z-index:999;background:#000000dd;flex-direction:column;align-items:center;justify-content:center;gap:13px;}
-#cel.on{display:flex;}
-.celb{font-size:88px;animation:bop .4s ease infinite alternate;}
-.celt{font-size:30px;font-weight:900;}
-.cels{font-size:15px;color:#a78bfa;font-weight:700;}
-@keyframes bop{from{transform:scale(1) rotate(-4deg);}to{transform:scale(1.2) rotate(4deg);}}
-@keyframes up{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-.up{animation:up .3s ease both;}
-svg.svgr{display:block;transform:rotate(-90deg);}
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#07070f" />
+    <title>My Habits · Daily Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+         :root {
+            --bg: #07070f;
+            --card: #111120;
+            --card2: #0d0d1a;
+            --border: #1e1e32;
+            --text: #f0eeff;
+            --muted: #55557a;
+        }
+        
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg);
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            color: var(--text);
+            max-width: 430px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+        /* ══ LOGIN PAGE ══════════════════════════════════════════════════ */
+        
+        #login-page {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 24px;
+        }
+        
+        .login-bg-glow {
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #a78bfa18 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #a78bfa, #38bdf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-bottom: 24px;
+            box-shadow: 0 0 40px #a78bfa30;
+        }
+        
+        .login-title {
+            font-size: 30px;
+            font-weight: 900;
+            letter-spacing: -.5px;
+            text-align: center;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #f0eeff, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .login-sub {
+            font-size: 14px;
+            color: var(--muted);
+            text-align: center;
+            margin-bottom: 36px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+        
+        .login-features {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 36px;
+        }
+        
+        .login-feat {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #111120;
+            border: 1px solid #1e1e32;
+            border-radius: 14px;
+            padding: 12px 16px;
+        }
+        
+        .login-feat-ico {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        
+        .login-feat-text {
+            font-size: 13px;
+            color: #9090b8;
+            font-weight: 600;
+        }
+        
+        .login-feat-text strong {
+            color: #f0eeff;
+        }
+        
+        .google-btn {
+            width: 100%;
+            background: #fff;
+            border: none;
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            color: #1a1a2e;
+            transition: all .2s;
+            box-shadow: 0 4px 20px #0006;
+            margin-bottom: 12px;
+        }
+        
+        .google-btn:active {
+            transform: scale(.98);
+            box-shadow: 0 2px 10px #0006;
+        }
+        
+        .google-btn svg {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+        
+        .guest-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 14px 20px;
+            color: var(--muted);
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        
+        .guest-btn:active {
+            background: #1e1e32;
+        }
+        
+        .login-footer {
+            font-size: 11px;
+            color: #3a3a5a;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 600;
+            line-height: 1.6;
+        }
+        /* ══ USERNAME MODAL ══════════════════════════════════════════════ */
+        
+        #username-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #000000cc;
+            z-index: 998;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        #username-modal.on {
+            display: flex;
+        }
+        
+        .umodal-box {
+            background: #111120;
+            border: 1px solid #1e1e32;
+            border-radius: 24px;
+            padding: 28px 24px;
+            width: 100%;
+            max-width: 380px;
+        }
+        
+        .umodal-box h2 {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+        
+        .umodal-box p {
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .umodal-input {
+            background: #0d0d1a;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 16px;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 800;
+            font-family: 'Nunito', sans-serif;
+            width: 100%;
+            outline: none;
+            margin-bottom: 14px;
+            transition: border-color .2s;
+        }
+        
+        .umodal-input:focus {
+            border-color: #a78bfa;
+        }
+        
+        .umodal-save {
+            width: 100%;
+            background: linear-gradient(135deg, #a78bfa, #818cf8);
+            border: none;
+            border-radius: 14px;
+            padding: 14px;
+            color: #000;
+            font-size: 16px;
+            font-weight: 900;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+        }
+        /* ══ NOTIFICATION BANNER ════════════════════════════════════════ */
+        
+        #notif-banner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            z-index: 300;
+            background: linear-gradient(135deg, #38bdf8, #a78bfa);
+            padding: 12px 16px;
+            cursor: pointer;
+        }
+        
+        #notif-banner.show {
+            display: block;
+        }
+        
+        .notif-inner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .notif-ico {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        
+        .notif-text p {
+            font-size: 13px;
+            font-weight: 800;
+            color: #000;
+            line-height: 1.3;
+        }
+        
+        .notif-text span {
+            font-size: 11px;
+            color: #00000080;
+            font-weight: 700;
+        }
+        
+        .notif-close {
+            margin-left: auto;
+            font-size: 18px;
+            color: #00000060;
+        }
+        /* ══ MAIN APP ════════════════════════════════════════════════════ */
+        
+        #app {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 88px;
+            display: none;
+        }
+        
+        #app::-webkit-scrollbar {
+            display: none;
+        }
+        
+        #nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background: rgba(8, 8, 18, 0.97);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            z-index: 200;
+            padding-bottom: env(safe-area-inset-bottom, 0);
+        }
+        
+        #nav.show {
+            display: flex;
+        }
+        
+        .nb {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--muted);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 11px 0 9px;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            transition: color .2s;
+        }
+        
+        .nb.on {
+            color: #a78bfa;
+        }
+        
+        .ni {
+            font-size: 21px;
+            line-height: 1;
+        }
+        
+        .nl {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .07em;
+            text-transform: uppercase;
+        }
+        
+        .hdr {
+            padding: 48px 20px 14px;
+            background: linear-gradient(180deg, #0c0c1e, var(--bg));
+        }
+        
+        .eyebrow {
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            font-weight: 800;
+        }
+        
+        .pg-title {
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: -.5px;
+            line-height: 1.1;
+        }
+        
+        .kdb-quote {
+            background: linear-gradient(135deg, #1a1a2e, #0d0d1a);
+            border: 1px solid #a78bfa30;
+            border-radius: 14px;
+            padding: 12px 16px;
+            margin: 10px 16px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .kdb-quote::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            font-size: 80px;
+            color: #a78bfa15;
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+        
+        .kdb-quote-text {
+            font-size: 13px;
+            font-weight: 800;
+            color: #c8c8e8;
+            line-height: 1.5;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .kdb-quote-by {
+            font-size: 11px;
+            color: #a78bfa;
+            font-weight: 700;
+            margin-top: 5px;
+            letter-spacing: .05em;
+        }
+        
+        .pcrd {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 10px 16px 0;
+        }
+        
+        .pmeta {
+            flex: 1;
+        }
+        
+        .plbl {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 3px;
+            font-weight: 700;
+        }
+        
+        .pnum {
+            font-size: 30px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+        
+        .psub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 3px;
+            font-weight: 600;
+        }
+        
+        .wtcrd {
+            background: linear-gradient(135deg, #1a1a2e, #111120);
+            border: 1px solid #4ade8030;
+            border-radius: 18px;
+            padding: 14px 16px;
+            margin: 10px 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        
+        .wtbar-wrap {
+            flex: 1;
+        }
+        
+        .wtbar-bg {
+            height: 8px;
+            background: #1a1a2e;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 6px 0;
+        }
+        
+        .wtbar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ade80, #fbbf24);
+            border-radius: 4px;
+            transition: width .5s ease;
+        }
+        
+        .sec {
+            padding: 0 16px;
+        }
+        
+        .stitle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 18px 0 10px;
+        }
+        
+        .stitle {
+            font-size: 11px;
+            letter-spacing: .15em;
+            color: var(--muted);
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+        
+        .hcrd {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 18px;
+            padding: 13px 15px;
+            margin-bottom: 9px;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            cursor: pointer;
+            user-select: none;
+            transition: border-color .2s, background .2s;
+        }
+        
+        .hcrd.done {
+            border-color: var(--hc);
+        }
+        
+        .hico {
+            width: 46px;
+            height: 46px;
+            border-radius: 13px;
+            background: #1a1a2e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+            border: 1px solid transparent;
+            transition: all .2s;
+        }
+        
+        .hcrd.done .hico {
+            border-color: var(--hc);
+        }
+        
+        .hmeta {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .hname {
+            font-size: 15px;
+            font-weight: 800;
+            color: #c8c8e8;
+            margin-bottom: 2px;
+        }
+        
+        .hcrd.done .hname {
+            color: #fff;
+        }
+        
+        .hsub {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+        
+        .hstrk {
+            font-size: 11px;
+            color: #fb923c;
+            margin-top: 3px;
+            font-weight: 700;
+        }
+        
+        .hchk {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2.5px solid #2e2e48;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all .2s;
+            font-size: 14px;
+            font-weight: 900;
+            color: #000;
+        }
+        
+        .hcrd.done .hchk {
+            background: var(--hc);
+            border-color: var(--hc);
+        }
+        
+        .expand-hint {
+            font-size: 10px;
+            color: var(--muted);
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        
+        .del-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: #ff4d4d15;
+            border: 1px solid #ff4d4d30;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            font-size: 13px;
+            transition: all .2s;
+        }
+        
+        .del-btn:active {
+            background: #ff4d4d40;
+        }
+        
+        .expand-panel {
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .panel-hdr {
+            padding: 11px 16px 10px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .panel-hdr-lbl {
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+        
+        .panel-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 11px 16px;
+            border-bottom: 1px solid #1a1a2820;
+        }
+        
+        .panel-row:last-child {
+            border-bottom: none;
+        }
+        
+        .panel-chk {
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            border: 2px solid #2e2e48;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 900;
+            color: #000;
+            transition: all .2s;
+            cursor: pointer;
+            margin-top: 2px;
+        }
+        
+        .panel-chk.done {
+            background: var(--hc2);
+            border-color: var(--hc2);
+        }
+        
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 9px;
+            border-radius: 20px;
+        }
+        
+        .wslots {
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .wslot {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-bottom: 1px solid #1a1a2820;
+            transition: background .15s;
+        }
+        
+        .wslot:last-child {
+            border-bottom: none;
+        }
+        
+        .wslot.done {
+            background: #38bdf812;
+        }
+        
+        .wschk {
+            width: 23px;
+            height: 23px;
+            border-radius: 7px;
+            border: 2px solid #2e2e48;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 900;
+            color: #000;
+            transition: all .2s;
+            cursor: pointer;
+        }
+        
+        .wslot.done .wschk {
+            background: #38bdf8;
+            border-color: #38bdf8;
+        }
+        
+        .wsinfo {
+            flex: 1;
+        }
+        
+        .wstime {
+            font-size: 13px;
+            font-weight: 800;
+            color: #c8c8e8;
+            margin-bottom: 1px;
+        }
+        
+        .wslot.done .wstime {
+            color: #38bdf8;
+        }
+        
+        .wsnote {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+        
+        .wdel {
+            width: 26px;
+            height: 26px;
+            border-radius: 7px;
+            background: #ff4d4d15;
+            border: 1px solid #ff4d4d30;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            font-size: 12px;
+        }
+        
+        .wadd-form {
+            padding: 12px 14px;
+            border-top: 1px solid var(--border);
+            background: #38bdf808;
+        }
+        
+        .wadd-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .wadd-input {
+            background: #0d0d1a;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 12px;
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 700;
+            font-family: 'Nunito', sans-serif;
+            flex: 1;
+            outline: none;
+        }
+        
+        .wadd-input:focus {
+            border-color: #38bdf8;
+        }
+        
+        .wadd-btn {
+            background: #38bdf8;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 14px;
+            color: #000;
+            font-size: 13px;
+            font-weight: 900;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            white-space: nowrap;
+        }
+        
+        .tip {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 15px 16px;
+            margin-top: 8px;
+        }
+        
+        .tip-lbl {
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            font-weight: 800;
+        }
+        
+        .tip-txt {
+            font-size: 13px;
+            color: #9090b8;
+            line-height: 1.75;
+            font-weight: 600;
+        }
+        
+        .wkwrap {
+            padding: 0 16px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .wkwrap::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .wktbl {
+            border-collapse: separate;
+            border-spacing: 4px;
+            min-width: 300px;
+            width: 100%;
+        }
+        
+        .wkgh {
+            font-size: 10px;
+            color: var(--muted);
+            text-align: center;
+            padding: 4px 0;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        
+        .wkgh.tc {
+            color: #a78bfa;
+        }
+        
+        .wkgl {
+            font-size: 11px;
+            color: #808098;
+            padding: 3px 2px;
+            white-space: nowrap;
+            font-weight: 700;
+        }
+        
+        .dot {
+            width: 29px;
+            height: 29px;
+            border-radius: 8px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 900;
+            border: 1.5px solid var(--border);
+            background: var(--card);
+            color: var(--muted);
+        }
+        
+        .dot.done {
+            border-color: transparent;
+            color: #000;
+        }
+        
+        .dot.fut {
+            opacity: .2;
+        }
+        
+        .sgrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+            padding: 0 16px;
+        }
+        
+        .scrd {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 14px;
+        }
+        
+        .scrd.on {
+            border-color: var(--hc);
+        }
+        
+        .scico {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .scnm {
+            font-size: 11px;
+            color: var(--muted);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+        
+        .scval {
+            font-size: 26px;
+            font-weight: 900;
+            color: #2e2e48;
+            letter-spacing: -1px;
+        }
+        
+        .scrd.on .scval {
+            color: #fb923c;
+        }
+        
+        .sclbl {
+            font-size: 10px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+        
+        .gstep {
+            display: flex;
+            gap: 13px;
+            padding: 14px 16px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            margin: 0 16px 9px;
+        }
+        
+        .gsico {
+            font-size: 24px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        
+        .gstitle {
+            font-size: 15px;
+            font-weight: 900;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        
+        .gsbody {
+            font-size: 13px;
+            color: #8080a0;
+            line-height: 1.65;
+            font-weight: 600;
+        }
+        
+        .sched {
+            margin: 0 16px 14px;
+            padding: 16px;
+            background: var(--card);
+            border: 1px solid #a78bfa30;
+            border-radius: 17px;
+        }
+        
+        .schedt {
+            font-size: 14px;
+            font-weight: 900;
+            color: #a78bfa;
+            margin-bottom: 11px;
+        }
+        
+        .srow {
+            display: flex;
+            gap: 9px;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 2.1;
+            font-weight: 600;
+        }
+        
+        .srow strong {
+            color: #c8c8e8;
+            font-weight: 800;
+        }
+        
+        .rules {
+            margin: 0 16px 14px;
+            padding: 15px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+        }
+        
+        .rulest {
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            margin-bottom: 9px;
+            font-weight: 800;
+        }
+        
+        .rulestxt {
+            font-size: 13px;
+            color: #9090b8;
+            line-height: 2;
+            font-weight: 600;
+        }
+        /* ADD HABIT MODAL */
+        
+        #modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #000000cc;
+            z-index: 500;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        
+        #modal-bg.on {
+            display: flex;
+        }
+        
+        #modal {
+            background: #111120;
+            border-radius: 24px 24px 0 0;
+            padding: 24px 20px 40px;
+            width: 100%;
+            max-width: 430px;
+            border-top: 1px solid var(--border);
+        }
+        
+        #modal h3 {
+            font-size: 18px;
+            font-weight: 900;
+            margin-bottom: 16px;
+        }
+        
+        #modal input,
+        #modal select {
+            background: #0d0d1a;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Nunito', sans-serif;
+            width: 100%;
+            outline: none;
+            margin-bottom: 10px;
+        }
+        
+        #modal input:focus,
+        #modal select:focus {
+            border-color: #a78bfa;
+        }
+        
+        .modal-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .modal-row input {
+            margin-bottom: 0;
+        }
+        
+        #modal-save {
+            background: #a78bfa;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            color: #000;
+            font-size: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            width: 100%;
+            font-family: 'Nunito', sans-serif;
+            margin-top: 4px;
+        }
+        
+        #modal-cancel {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            font-family: 'Nunito', sans-serif;
+            margin-top: 8px;
+        }
+        /* NOTIF PERMISSION CARD */
+        
+        .notif-card {
+            background: linear-gradient(135deg, #1a1a2e, #0d0d1a);
+            border: 1px solid #38bdf830;
+            border-radius: 16px;
+            padding: 14px 16px;
+            margin: 10px 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .notif-card-text {
+            flex: 1;
+            font-size: 12px;
+            color: #9090b8;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+        
+        .notif-card-text strong {
+            color: #38bdf8;
+            display: block;
+            margin-bottom: 2px;
+            font-size: 13px;
+        }
+        
+        .notif-allow-btn {
+            background: #38bdf8;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 14px;
+            color: #000;
+            font-size: 12px;
+            font-weight: 900;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            white-space: nowrap;
+        }
+        /* PROFILE MENU */
+        
+        .profile-btn {
+            position: fixed;
+            top: 14px;
+            right: 16px;
+            z-index: 150;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a78bfa, #38bdf8);
+            border: none;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 900;
+            color: #000;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .profile-btn.show {
+            display: flex;
+        }
+        
+        .profile-menu {
+            display: none;
+            position: fixed;
+            top: 58px;
+            right: 16px;
+            z-index: 150;
+            background: #111120;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 8px;
+            min-width: 180px;
+        }
+        
+        .profile-menu.show {
+            display: block;
+        }
+        
+        .pmenu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+            color: #c8c8e8;
+            transition: background .15s;
+        }
+        
+        .pmenu-item:active {
+            background: #1e1e32;
+        }
+        
+        .pmenu-sep {
+            height: 1px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+        
+        #cel {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            background: #000000dd;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 13px;
+        }
+        
+        #cel.on {
+            display: flex;
+        }
+        
+        .celb {
+            font-size: 88px;
+            animation: bop .4s ease infinite alternate;
+        }
+        
+        @keyframes bop {
+            from {
+                transform: scale(1) rotate(-4deg);
+            }
+            to {
+                transform: scale(1.2) rotate(4deg);
+            }
+        }
+        
+        @keyframes up {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .up {
+            animation: up .3s ease both;
+        }
+        
+        svg.svgr {
+            display: block;
+            transform: rotate(-90deg);
+        }
+    </style>
 </head>
+
 <body>
-<div id="app"></div>
- 
-<div id="nav">
-  <button class="nb on" id="nb-today" onclick="goTab('today')"><span class="ni">⚡</span><span class="nl">Today</span></button>
-  <button class="nb" id="nb-weekly" onclick="goTab('weekly')"><span class="ni">📅</span><span class="nl">Weekly</span></button>
-  <button class="nb" id="nb-guide" onclick="goTab('guide')"><span class="ni">🗺️</span><span class="nl">Guide</span></button>
-</div>
- 
-<!-- ADD HABIT MODAL -->
-<div id="modal-bg" onclick="if(event.target===this)closeModal()">
-  <div id="modal">
-    <h3 id="modal-title">➕ Add New Habit</h3>
-    <input id="modal-name" placeholder="Habit name e.g. Push ups" maxlength="40"/>
-    <div class="modal-row">
-      <input id="modal-icon" placeholder="Icon e.g. 💪" maxlength="4" style="width:80px;flex:none;text-align:center;font-size:22px;"/>
-      <input id="modal-sub" placeholder="Description e.g. 20 reps daily"/>
+
+    <!-- ══ LOGIN PAGE ══════════════════════════════════════════════════ -->
+    <div id="login-page">
+        <div class="login-bg-glow"></div>
+        <div class="login-logo">🏆</div>
+        <h1 class="login-title">My Habits</h1>
+        <p class="login-sub">Your personal daily habit tracker.<br>Build discipline. Track progress. Win every day.</p>
+        <div class="login-features">
+            <div class="login-feat">
+                <span class="login-feat-ico">🔥</span>
+                <span class="login-feat-text"><strong>Track streaks</strong> — never break the chain</span>
+            </div>
+            <div class="login-feat">
+                <span class="login-feat-ico">💧</span>
+                <span class="login-feat-text"><strong>Water reminders</strong> — get notified at each slot</span>
+            </div>
+            <div class="login-feat">
+                <span class="login-feat-ico">📊</span>
+                <span class="login-feat-text"><strong>Weekly grid</strong> — see your full progress</span>
+            </div>
+            <div class="login-feat">
+                <span class="login-feat-ico">✨</span>
+                <span class="login-feat-text"><strong>Custom habits</strong> — build your own routine</span>
+            </div>
+        </div>
+        <button class="google-btn" onclick="loginWithGoogle()">
+    <svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+    Continue with Google
+  </button>
+        <button class="guest-btn" onclick="loginAsGuest()">Continue as Guest</button>
+        <p class="login-footer">Your data is saved privately on your device.<br>No data is shared with anyone.</p>
     </div>
-    <select id="modal-color">
+
+    <!-- ══ USERNAME MODAL ════════════════════════════════════════════ -->
+    <div id="username-modal">
+        <div class="umodal-box">
+            <h2>👋 What's your name?</h2>
+            <p>We'll personalise your greeting every morning!</p>
+            <input class="umodal-input" id="uname-input" placeholder="Enter your name e.g. Manjunath" maxlength="30" />
+            <button class="umodal-save" onclick="saveUsername()">Let's Go! 🚀</button>
+        </div>
+    </div>
+
+    <!-- ══ NOTIFICATION BANNER ════════════════════════════════════════ -->
+    <div id="notif-banner" onclick="dismissNotif()">
+        <div class="notif-inner">
+            <span class="notif-ico" id="notif-ico">💧</span>
+            <div class="notif-text">
+                <p id="notif-msg">Time to drink water!</p>
+                <span id="notif-sub">Tap to dismiss</span>
+            </div>
+            <span class="notif-close">✕</span>
+        </div>
+    </div>
+
+    <!-- ══ PROFILE BUTTON ════════════════════════════════════════════ -->
+    <button class="profile-btn" id="profile-btn" onclick="toggleProfileMenu()">
+  <span id="profile-initial">M</span>
+</button>
+    <div class="profile-menu" id="profile-menu">
+        <div class="pmenu-item" onclick="editUsername()">✏️ Edit Name</div>
+        <div class="pmenu-item" onclick="toggleNotifications()">🔔 <span id="notif-toggle-text">Enable Notifications</span></div>
+        <div class="pmenu-sep"></div>
+        <div class="pmenu-item" onclick="logout()" style="color:#ff6b6b">🚪 Logout</div>
+    </div>
+
+    <!-- ══ MAIN APP ════════════════════════════════════════════════════ -->
+    <div id="app"></div>
+
+    <div id="nav">
+        <button class="nb on" id="nb-today" onclick="goTab('today')"><span class="ni">⚡</span><span class="nl">Today</span></button>
+        <button class="nb" id="nb-weekly" onclick="goTab('weekly')"><span class="ni">📅</span><span class="nl">Weekly</span></button>
+        <button class="nb" id="nb-guide" onclick="goTab('guide')"><span class="ni">🗺️</span><span class="nl">Guide</span></button>
+    </div>
+
+    <!-- ══ ADD HABIT MODAL ════════════════════════════════════════════ -->
+    <div id="modal-bg" onclick="if(event.target===this)closeModal()">
+        <div id="modal">
+            <h3>➕ Add New Habit</h3>
+            <input id="modal-name" placeholder="Habit name e.g. Push ups" maxlength="40" />
+            <div class="modal-row">
+                <input id="modal-icon" placeholder="Icon 💪" maxlength="4" style="width:80px;flex:none;text-align:center;font-size:22px;" />
+                <input id="modal-sub" placeholder="Description e.g. 20 reps daily" />
+            </div>
+            <select id="modal-color">
       <option value="#a78bfa">💜 Purple</option>
       <option value="#38bdf8">💙 Blue</option>
       <option value="#4ade80">💚 Green</option>
@@ -187,326 +1377,872 @@ svg.svgr{display:block;transform:rotate(-90deg);}
       <option value="#34d399">🟢 Mint</option>
       <option value="#818cf8">🔵 Indigo</option>
     </select>
-    <button id="modal-save" onclick="saveNewHabit()">✅ Add Habit</button>
-    <button id="modal-cancel" onclick="closeModal()">Cancel</button>
-  </div>
-</div>
- 
-<div id="cel" onclick="this.classList.remove('on')">
-  <div class="celb">🎉</div>
-  <div class="celt">Perfect Day Bro!</div>
-  <div class="cels">All habits complete 🔥</div>
-  <div style="font-size:12px;color:var(--muted);font-weight:600;margin-top:4px">Tap to close</div>
-</div>
- 
-<script>
-// ═══ DEFAULT HABITS ════════════════════════════════════════════════
-const DEFAULT_HABITS=[
-  {id:'soak',      label:'Soak Badam & Chana',      sub:'9:45pm every night — overnight only!', icon:'🌊', color:'#34d399', type:'check'},
-  {id:'water',     label:'Water Intake',             sub:'2.5 litres · your custom slots',       icon:'💧', color:'#38bdf8', type:'water'},
-  {id:'breathing', label:'Breathing Exercises',      sub:'6:05am · Anulom Vilom + Kapalbhati',   icon:'🌬️', color:'#67e8f9', type:'expand'},
-  {id:'run',       label:'2km Run + Exercise',       sub:'6:10am · Breathe 2:2 rhythm',          icon:'🏃', color:'#4ade80', type:'check'},
-  {id:'height',    label:'Height Exercises',         sub:'After run · Dead hang + Yoga poses',   icon:'📏', color:'#818cf8', type:'expand'},
-  {id:'shake',     label:'Morning Shake',            sub:'7:25am · Within 20 mins of run!',      icon:'🥛', color:'#f472b6', type:'expand'},
-  {id:'learning',  label:'Learning / Study',         sub:'6:10pm + 8:00pm study blocks',         icon:'📖', color:'#fbbf24', type:'check'},
-  {id:'comm',      label:'Communication Upskill',    sub:'Read aloud 10 mins · 9:30pm',          icon:'🗣️', color:'#fb923c', type:'check'},
-  {id:'meditation',label:'Meditation + Yoga',        sub:'After run · 10 mins focus',            icon:'🧘', color:'#a78bfa', type:'check'},
-  {id:'face',      label:'Face Routine',             sub:'3x daily · turmeric + milk + water',   icon:'✨', color:'#f9a8d4', type:'face'},
-  {id:'sleep',     label:'Sleep Breathing + Bed',    sub:'10:10pm · 4-7-8 + Yoga Nidra',        icon:'🌙', color:'#818cf8', type:'expand'},
-];
- 
-const DEFAULT_WSLOTS=[
-  {id:'w1',time:'5:55 am', ml:300,note:'Wake up — before anything!'},
-  {id:'w2',time:'7:25 am', ml:300,note:'After run — before morning shake.'},
-  {id:'w3',time:'7:55 am', ml:200,note:'Before leaving for college bus.'},
-  {id:'w4',time:'10:30 am',ml:300,note:'College break — carry your bottle!'},
-  {id:'w5',time:'1:00 pm', ml:250,note:'Before lunch. Seated, slow sips.'},
-  {id:'w6',time:'1:30 pm', ml:200,note:'After lunch. Wait 45 min gap.'},
-  {id:'w7',time:'6:00 pm', ml:200,note:'After reaching hostel.'},
-  {id:'w8',time:'7:45 pm', ml:200,note:'During or after hostel dinner.'},
-  {id:'w9',time:'9:55 pm', ml:300,note:'Last water before sleep. Small sips!'},
-];
- 
-const BREATHING=[
-  {id:'b1',icon:'🌀',title:'Anulom Vilom',badge:'10 rounds · 3 mins',color:'#67e8f9',
-   info:'Sit cross-legged. Close RIGHT nostril — inhale LEFT 4 counts. Hold both 4 counts. Close LEFT — exhale RIGHT 4 counts. Repeat other side = 1 round. Do 10 rounds!',
-   benefit:'Balances brain hemispheres · Reduces anxiety · More oxygen · Perfect before run'},
-  {id:'b2',icon:'💨',title:'Kapalbhati',badge:'3 sets × 30 exhales',color:'#67e8f9',
-   info:'Sit straight spine erect. Exhale SHARPLY through nose — stomach goes IN. Let inhale happen naturally. 30 exhales per set. Rest 30 sec between sets.',
-   benefit:'Boosts growth hormone · Improves lung capacity · Clears energy channels'},
-  {id:'b3',icon:'📦',title:'Box Breathing',badge:'5 rounds · before study',color:'#67e8f9',
-   info:'Inhale nose 4 counts → Hold 4 counts → Exhale mouth 4 counts → Hold empty 4 counts = 1 round. Do 5 rounds before every study session.',
-   benefit:'Focus increases 40% · Stress drops · Brain fully activates · Used by Navy SEALs'},
-];
- 
-const HEIGHT_EX=[
-  {id:'h1',icon:'🏋️',title:'Dead Hang',badge:'3 sets × 60 sec',color:'#818cf8',
-   info:'Find any bar — hostel, college, tree branch. Hang both hands. RELAX whole body — let spine decompress fully. 3 sets 45-60 seconds each.',
-   benefit:'Most important! +1-2cm in 3 months · Decompresses spine · Strengthens grip'},
-  {id:'h2',icon:'🧍',title:'Tadasana',badge:'3 × 1 min',color:'#818cf8',
-   info:'Stand straight feet together. Rise on toes. Stretch both arms UP — fingers interlocked. Look up slightly. Hold 1 minute. Come down slowly. Repeat 3 times.',
-   benefit:'Full body lengthening · Better posture · Instant 1-2cm from posture alone'},
-  {id:'h3',icon:'🐍',title:'Bhujangasana',badge:'3 × 30 sec',color:'#818cf8',
-   info:'Lie on stomach — palms near chest. Press palms — lift chest up. Keep hips on floor. Look up — arch spine. Hold 30 sec. Come down slowly.',
-   benefit:'Opens vertebrae spacing · Strengthens back · Direct spine lengthening effect'},
-  {id:'h4',icon:'🔄',title:'Chakrasana',badge:'3 × 20 sec',color:'#818cf8',
-   info:'Lie on back — bend knees. Place palms near ears. Press up — arch body into bridge or wheel. Hold 20 sec. Come down slowly. Repeat 3 times.',
-   benefit:'Maximum spine extension · Best pose for height · Growth plates stimulation'},
-  {id:'h5',icon:'🦘',title:'Skipping Rope',badge:'300 jumps daily',color:'#818cf8',
-   info:'Buy simple rope Rs 100 from market. Do 300 jumps after run. Start with sets of 50 if needed. Build to continuous 300. Breathe rhythmically.',
-   benefit:'Stimulates growth plates open at 19 · Strengthens calves · Bone density increases'},
-];
- 
-const MORNING_SHAKE=[
-  {name:'Full fat milk',amt:'250ml'},
-  {name:'Banana (ripe)',amt:'1 large'},
-  {name:'Soaked badam (peeled)',amt:'8 pieces'},
-  {name:'Soaked chana',amt:'1 tbsp'},
-  {name:'Karjura (no seed)',amt:'2 pieces'},
-  {name:'Peanut butter',amt:'1 heaped tsp'},
-  {name:'Homemade tuppa',amt:'½ tsp'},
-  {name:'Pintolas oats',amt:'2 tbsp'},
-];
- 
-const SLEEP_ROUTINE=[
-  {id:'s1',icon:'🐝',title:'Bhramari Pranayama',badge:'7 rounds · 10:02pm',color:'#818cf8',
-   info:'Sit on bed. Close both ears with thumbs. Place fingers gently over eyes. Deep breath in. While exhaling make HMMMM sound like a bee. Feel vibration in skull. Do 7 rounds.',
-   benefit:'Releases melatonin naturally · Stops mental chatter · More powerful than sleep tablet'},
-  {id:'s2',icon:'🌬️',title:'4-7-8 Breathing',badge:'4 rounds · 10:12pm',color:'#818cf8',
-   info:'Lie in bed. Inhale through nose 4 counts. Hold 7 counts. Exhale slowly through mouth 8 counts. Do ONLY 4 rounds. Most people sleep before finishing!',
-   benefit:'Activates vagus nerve — body OFF switch · Deep sleep within 5 minutes'},
-  {id:'s3',icon:'🧘',title:'Yoga Nidra Body Scan',badge:'10:15pm · fall asleep',color:'#818cf8',
-   info:'Lie flat Shavasana. Mentally say each part and fully relax: right foot → right leg → left foot → left leg → hips → stomach → chest → arms → shoulders → neck → face → whole body heavy sinking.',
-   benefit:'Most people sleep before reaching face · Deep sleep reached faster · Full body recovery'},
-];
- 
-// ═══ FACE GUIDE — DETAILED ═════════════════════════════════════════
-const FACE_SECTIONS=[
-  {
-    title:'🌅 Morning Routine · 5:55am · 3 mins',
-    color:'#f9a8d4',
-    steps:[
-      {step:'Step 1',action:'Cold water — 10 splashes',detail:'Immediately after waking. Splash cold hostel tap water 10 times on face. This closes pores, reduces morning puffiness, activates blood circulation. Exactly what top heroes do every morning!'},
-      {step:'Step 2',action:'Turmeric + Milk mix',detail:'Pinch of turmeric from your shake stock + 4-5 drops of your daily milk. Mix in your palm. Apply gently on face with fingertips in small circular motion for 60 seconds. Focus on acne areas on cheeks.'},
-      {step:'Step 3',action:'Cold water wash + Pat dry',detail:'Wash off completely with cold water. PAT dry with clean cloth — never rub! Rubbing spreads acne bacteria to healthy skin. Let face air dry for 2 minutes before anything.'},
-    ],
-    donts:['❌ Never use hot water — destroys skin barrier','❌ Never rub with towel — spreads bacteria','❌ Never apply anything immediately after washing']
-  },
-  {
-    title:'🏃 Post Run Wash · 7:25am · 2 mins',
-    color:'#4ade80',
-    steps:[
-      {step:'Step 1',action:'Splash cold water 15 times',detail:'After run your face has sweat, dust, bacteria from outside air. Cold water splash immediately removes surface sweat before it dries and clogs pores.'},
-      {step:'Step 2',action:'Crushed soaked chana scrub',detail:'Take 4-5 soaked chana from your overnight soak. Crush between fingers into rough paste in your palm. Apply on face gently in circular motion 60 seconds. This is a natural micro-scrub — same as Rs 500 face scrubs but free!'},
-      {step:'Step 3',action:'Cold water wash + air dry',detail:'Wash completely with cold water. Shake water off gently with hands. Pat with clean cloth. Let face breathe for 5 minutes before going for shower.'},
-    ],
-    donts:['❌ Never skip this after run — sweat left on face = guaranteed acne','❌ Do not press hard with chana — gentle circular only']
-  },
-  {
-    title:'☀️ Midday Protection · College · Free',
-    color:'#fbbf24',
-    steps:[
-      {step:'Rule 1',action:'Never touch face with hands',detail:'Your hands touch books, desks, phones, doors all day. Every touch transfers thousands of bacteria directly onto your acne. Most acne spreading happens from hand touching. Be very conscious of this in college!'},
-      {step:'Rule 2',action:'Wipe phone screen before calls',detail:'Phone screen has more bacteria than a toilet seat. Every time you make a call, you press that screen directly on your cheek where your acne is. Wipe on your shirt before every call!'},
-      {step:'Rule 3',action:'Bus window — cover face in dust',detail:'College bus ride — dust and pollution directly hits your face. Use your collar or hand to shield face near windows. Splash cold water immediately when you reach hostel!'},
-    ],
-    donts:['❌ Never pop or squeeze pimples — creates permanent marks','❌ Never wipe sweat with dirty cloth or sleeve']
-  },
-  {
-    title:'🌙 Night Routine · Before Sleep · 5 mins',
-    color:'#a78bfa',
-    steps:[
-      {step:'Step 1',action:'Cold water wash',detail:'Simple cold water splash to remove day dust, sweat, pollution. Never sleep without washing — 8 hours of bacteria on skin = more acne by morning.'},
-      {step:'Step 2',action:'Turmeric + Milk mask — 5 mins',detail:'Pinch turmeric + few drops milk = paste. Apply on full face. Leave exactly 5 minutes — timer on phone. Turmeric kills acne bacteria while milk brightens and repairs. Wash with cold water. Pat dry.'},
-      {step:'Step 3',action:'Homemade tuppa on marks ONLY',detail:'1 tiny drop of your homemade ghee. Dab ONLY on acne marks and dark spots — NOT on whole face. Not on active pimples. Only on old marks. Skin repairs itself 10pm-2am and tuppa accelerates this healing overnight.'},
-      {step:'Step 4',action:'Never touch face again',detail:'After night routine — do not touch face until morning. Wash hands before routine. Keep pillow clean. This is when your skin does maximum healing.'},
-    ],
-    donts:['❌ Never apply tuppa on active pimples — only on marks','❌ Never sleep with wet face','❌ Never use more than 1 tiny drop of tuppa']
-  },
-  {
-    title:'📅 Weekly Deep Treatment · Sunday Only',
-    color:'#fb923c',
-    steps:[
-      {step:'Step 1',action:'Besan + Turmeric + Milk mask',detail:'1 tbsp besan (grind your soaked chana into powder OR use hostel kitchen besan) + ¼ tsp turmeric + enough milk drops to make paste. Apply on face. Leave 15 minutes. Wash with cold water. This deep cleans pores, removes dead skin, brightens tone — used in Bollywood for decades!'},
-      {step:'Step 2',action:'Chana paste full scrub',detail:'After mask, crush 8-10 soaked chana into paste. Scrub full face gently circular motion 2 minutes. This removes the dead skin layer that mask loosened. Wash cold water. Your skin will feel completely new!'},
-      {step:'Step 3',action:'Rest face — no products',detail:'After Sunday treatment — just cold water for rest of day. Let skin breathe and recover. Maximum 1 deep treatment per week — more than this damages skin barrier.'},
-    ],
-    donts:['❌ Never do deep treatment more than once a week','❌ If skin feels irritated — reduce turmeric amount next time']
-  },
-  {
-    title:'🍽️ Inside Out — Diet for Clear Skin',
-    color:'#34d399',
-    steps:[
-      {step:'Food 1',action:'Your eggs daily — keep this!',detail:'2-3 eggs daily gives collagen — the protein that makes skin elastic and heals acne marks. Your body uses egg protein to rebuild skin cells overnight. Never skip eggs.'},
-      {step:'Food 2',action:'Soaked badam — keep this!',detail:'Almonds give Vitamin E — the most powerful skin vitamin. Vitamin E heals acne marks from inside. Your soaked badam in shake is already doing skin healing without you knowing!'},
-      {step:'Food 3',action:'Reduce oily hostel food',detail:'Hostel food is often very oily and spicy. Oil and spice directly triggers sebaceous glands to produce more face oil = more acne. Eat what you must but drink extra water after oily meals.'},
-      {step:'Food 4',action:'Water = best skin medicine',detail:'Your 2.5L daily water goal is literally the most powerful skin care routine in the world. Well hydrated skin stretches without breaking — no new stretch marks, no new acne, natural glow. Keep every water slot!'},
-    ],
-    donts:['❌ Avoid biscuits and packaged snacks — refined flour = acne food','❌ Avoid sugary drinks — sugar spikes = oil spike = acne spike']
-  },
-  {
-    title:'💤 Sleep = Free Skin Repair',
-    color:'#818cf8',
-    steps:[
-      {step:'Fact 1',action:'10pm-2am is skin golden hour',detail:'Your body releases maximum growth hormone and skin repair chemicals during 10pm-2am. This is why sleeping at 10:15pm is more powerful than any face cream. Your face repairs itself for FREE while you sleep!'},
-      {step:'Fact 2',action:'Pillow hygiene matters',detail:'Hostel pillow collects your sweat, oil, hair oil every night. Sleeping on it 7+ hours means rubbing all that bacteria on your face repeatedly. Flip pillow to clean side every 3 days. It is free and stops 30% of acne!'},
-      {step:'Fact 3',action:'Sleep position — back is best',detail:'Sleeping on stomach or side presses face into pillow for hours. This clogs pores physically and causes wrinkles over time. Try to sleep on your back in Shavasana position. Your Yoga Nidra routine naturally puts you in correct position!'},
-    ],
-    donts:['❌ Never sleep after 11pm — skin repair window closes','❌ Never sleep with unwashed face']
-  },
-];
- 
-const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
- 
-// ═══ STATE ════════════════════════════════════════════════════════
-let ST={tab:'today',openPanel:'',checked:{},water:{},subChecked:{},weight:54,wslots:[],customHabits:[],faceChecked:{}};
- 
-function tk(){return new Date().toISOString().split('T')[0];}
-function save(){
-  try{
-    localStorage.setItem('mhv7',JSON.stringify({
-      c:ST.checked,w:ST.water,sc:ST.subChecked,wt:ST.weight,
-      ws:ST.wslots,ch:ST.customHabits,fc:ST.faceChecked
-    }));
-  }catch(e){}
-}
-function load(){
-  try{
-    const d=JSON.parse(localStorage.getItem('mhv7')||'{}');
-    ST.checked=d.c||{};ST.water=d.w||{};ST.subChecked=d.sc||{};
-    ST.weight=d.wt||54;ST.wslots=d.ws||JSON.parse(JSON.stringify(DEFAULT_WSLOTS));
-    ST.customHabits=d.ch||[];ST.faceChecked=d.fc||{};
-  }catch(e){ST.wslots=JSON.parse(JSON.stringify(DEFAULT_WSLOTS));}
-}
- 
-function allHabits(){return [...DEFAULT_HABITS,...ST.customHabits];}
- 
-// ═══ COMPUTED ═════════════════════════════════════════════════════
-function wMl(){return ST.wslots.filter(s=>(ST.water[tk()]||{})[s.id]).reduce((a,s)=>a+s.ml,0);}
-function wCount(){return ST.wslots.filter(s=>(ST.water[tk()]||{})[s.id]).length;}
-function wTotal(){return ST.wslots.reduce((a,s)=>a+s.ml,0);}
-function wPct(){const t=wTotal();return t>0?Math.min(100,Math.round((wMl()/t)*100)):0;}
- 
-function isDone(hid,day){
-  day=day||tk();
-  const sc=ST.subChecked[day]||{};
-  const fc=ST.faceChecked[day]||{};
-  if(hid==='water') return ST.wslots.length>0&&ST.wslots.every(s=>(ST.water[day]||{})[s.id]);
-  if(hid==='breathing') return BREATHING.every(b=>sc['b_'+b.id]);
-  if(hid==='height') return HEIGHT_EX.every(h=>sc['h_'+h.id]);
-  if(hid==='shake') return !!sc['shake_morning'];
-  if(hid==='face') return FACE_SECTIONS.every((_,i)=>fc['fs_'+i]);
-  if(hid==='sleep') return SLEEP_ROUTINE.every(s=>sc['sl_'+s.id]);
-  return !!(ST.checked[day]||{})[hid];
-}
-function doneToday(){return allHabits().filter(h=>isDone(h.id)).length;}
-function dayPct(){return Math.round((doneToday()/allHabits().length)*100);}
-function streak(hid){
-  let s=0,d=new Date();d.setDate(d.getDate()-1);
-  for(let i=0;i<365;i++){const k=d.toISOString().split('T')[0];if(isDone(hid,k)){s++;d.setDate(d.getDate()-1);}else break;}
-  return s;
-}
-function avgStreak(){return Math.round(allHabits().reduce((a,h)=>a+streak(h.id),0)/Math.max(1,allHabits().length));}
-function weightPct(){return Math.max(0,Math.round(((ST.weight-54)/(60-54))*100));}
- 
-// ═══ SVG RING ═════════════════════════════════════════════════════
-function ring(pct,color,sz,sw){
-  sz=sz||72;sw=sw||6;
-  const r=(sz-sw*2)/2,c=2*Math.PI*r,off=c-(pct/100)*c;
-  return `<svg width="${sz}" height="${sz}" class="svgr"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="#ffffff08" stroke-width="${sw}"/><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-dasharray="${c.toFixed(2)}" stroke-dashoffset="${off.toFixed(2)}" stroke-linecap="round" style="transition:stroke-dashoffset .5s ease"/></svg>`;
-}
- 
-// ═══ ACTIONS ══════════════════════════════════════════════════════
-function tapHabit(hid){
-  const expandTypes=['water','breathing','height','shake','face','sleep'];
-  if(expandTypes.includes(hid)){ST.openPanel=ST.openPanel===hid?'':hid;render();return;}
-  const d=tk();if(!ST.checked[d])ST.checked[d]={};
-  ST.checked[d][hid]=!ST.checked[d][hid];
-  save();render();tryParty();
-}
-function tapSub(key){
-  const d=tk();if(!ST.subChecked[d])ST.subChecked[d]={};
-  ST.subChecked[d][key]=!ST.subChecked[d][key];
-  save();render();tryParty();
-}
-function tapFace(key){
-  const d=tk();if(!ST.faceChecked[d])ST.faceChecked[d]={};
-  ST.faceChecked[d][key]=!ST.faceChecked[d][key];
-  save();render();tryParty();
-}
-function tapWater(sid){
-  const d=tk();if(!ST.water[d])ST.water[d]={};
-  ST.water[d][sid]=!ST.water[d][sid];
-  save();render();tryParty();
-}
-function deleteWslot(sid){
-  ST.wslots=ST.wslots.filter(s=>s.id!==sid);
-  save();render();
-}
-function addWslot(){
-  const time=document.getElementById('wadd-time').value;
-  const ml=parseInt(document.getElementById('wadd-ml').value)||200;
-  const note=document.getElementById('wadd-note').value||'Custom slot';
-  if(!time){alert('Please enter a time!');return;}
-  const id='wc_'+Date.now();
-  // Insert sorted by time
-  const newSlot={id,time,ml,note};
-  ST.wslots.push(newSlot);
-  ST.wslots.sort((a,b)=>{
-    const toMins=t=>{const m=t.match(/(\d+):(\d+)\s*(am|pm)/i);if(!m)return 0;let h=parseInt(m[1]),mn=parseInt(m[2]);if(m[3].toLowerCase()==='pm'&&h!==12)h+=12;if(m[3].toLowerCase()==='am'&&h===12)h=0;return h*60+mn;};
-    return toMins(a.time)-toMins(b.time);
-  });
-  save();render();
-}
-function updateWeight(val){ST.weight=parseFloat(val)||54;save();render();}
-function tryParty(){
-  if(doneToday()===allHabits().length){
-    document.getElementById('cel').classList.add('on');
-    setTimeout(()=>document.getElementById('cel').classList.remove('on'),4500);
-  }
-}
-function goTab(t){
-  ST.tab=t;ST.openPanel='';
-  ['today','weekly','guide'].forEach(x=>document.getElementById('nb-'+x).classList.toggle('on',x===t));
-  render();document.getElementById('app').scrollTop=0;
-}
- 
-// ═══ MODAL ════════════════════════════════════════════════════════
-function openModal(){document.getElementById('modal-bg').classList.add('on');}
-function closeModal(){document.getElementById('modal-bg').classList.remove('on');}
-function saveNewHabit(){
-  const name=document.getElementById('modal-name').value.trim();
-  const icon=document.getElementById('modal-icon').value.trim()||'⭐';
-  const sub=document.getElementById('modal-sub').value.trim()||'Daily habit';
-  const color=document.getElementById('modal-color').value;
-  if(!name){alert('Please enter a habit name!');return;}
-  const id='custom_'+Date.now();
-  ST.customHabits.push({id,label:name,sub,icon,color,type:'check'});
-  save();closeModal();render();
-  document.getElementById('modal-name').value='';
-  document.getElementById('modal-icon').value='';
-  document.getElementById('modal-sub').value='';
-}
-function deleteCustomHabit(id){
-  if(!confirm('Remove this habit?'))return;
-  ST.customHabits=ST.customHabits.filter(h=>h.id!==id);
-  save();render();
-}
- 
-// ═══ RENDER ═══════════════════════════════════════════════════════
-function render(){
-  const app=document.getElementById('app');
-  if(ST.tab==='today') app.innerHTML=renderToday();
-  if(ST.tab==='weekly') app.innerHTML=renderWeekly();
-  if(ST.tab==='guide') app.innerHTML=renderGuide();
-}
- 
-function renderExpandPanel(items,prefix,color,footer){
-  const sc=ST.subChecked[tk()]||{};
-  let o='';
-  items.forEach(item=>{
-    const key=prefix+item.id,done=!!sc[key];
-    o+=`<div class="panel-row">
+            <button id="modal-save" onclick="saveNewHabit()">✅ Add Habit</button>
+            <button id="modal-cancel" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <div id="cel" onclick="this.classList.remove('on')">
+        <div class="celb">🎉</div>
+        <div style="font-size:30px;font-weight:900">Perfect Day!</div>
+        <div style="font-size:15px;color:#a78bfa;font-weight:700">All habits complete 🔥</div>
+        <div style="font-size:12px;color:var(--muted);font-weight:600;margin-top:4px">Tap to close</div>
+    </div>
+
+    <script>
+        // ══ ALL DATA ═══════════════════════════════════════════════════════
+        const DEFAULT_HABITS = [{
+            id: 'soak',
+            label: 'Soak Badam & Chana',
+            sub: '9:45pm every night — overnight!',
+            icon: '🌊',
+            color: '#34d399',
+            type: 'check',
+            canDelete: true
+        }, {
+            id: 'water',
+            label: 'Water Intake',
+            sub: '2.5 litres · your custom slots',
+            icon: '💧',
+            color: '#38bdf8',
+            type: 'water',
+            canDelete: true
+        }, {
+            id: 'breathing',
+            label: 'Breathing Exercises',
+            sub: '6:05am · Anulom Vilom + Kapalbhati',
+            icon: '🌬️',
+            color: '#67e8f9',
+            type: 'expand',
+            canDelete: true
+        }, {
+            id: 'run',
+            label: '2km Run + Exercise',
+            sub: '6:10am · Breathe 2:2 rhythm',
+            icon: '🏃',
+            color: '#4ade80',
+            type: 'check',
+            canDelete: true
+        }, {
+            id: 'height',
+            label: 'Height Exercises',
+            sub: 'After run · Dead hang + Yoga',
+            icon: '📏',
+            color: '#818cf8',
+            type: 'expand',
+            canDelete: true
+        }, {
+            id: 'shake',
+            label: 'Morning Shake',
+            sub: '7:25am · Within 20 mins of run!',
+            icon: '🥛',
+            color: '#f472b6',
+            type: 'expand',
+            canDelete: true
+        }, {
+            id: 'learning',
+            label: 'Learning / Study',
+            sub: '6:10pm + 8:00pm study blocks',
+            icon: '📖',
+            color: '#fbbf24',
+            type: 'check',
+            canDelete: true
+        }, {
+            id: 'comm',
+            label: 'Communication Upskill',
+            sub: 'Read aloud 10 mins · 9:30pm',
+            icon: '🗣️',
+            color: '#fb923c',
+            type: 'check',
+            canDelete: true
+        }, {
+            id: 'meditation',
+            label: 'Meditation + Yoga',
+            sub: 'After run · 10 mins focus',
+            icon: '🧘',
+            color: '#a78bfa',
+            type: 'check',
+            canDelete: true
+        }, {
+            id: 'face',
+            label: 'Face Routine',
+            sub: '3x daily · zero cost routine',
+            icon: '✨',
+            color: '#f9a8d4',
+            type: 'face',
+            canDelete: true
+        }, {
+            id: 'sleep',
+            label: 'Sleep Breathing + Bed',
+            sub: '10:10pm · 4-7-8 + Yoga Nidra',
+            icon: '🌙',
+            color: '#818cf8',
+            type: 'expand',
+            canDelete: true
+        }, ];
+
+        const DEFAULT_WSLOTS = [{
+            id: 'w1',
+            time: '5:55 am',
+            ml: 300,
+            note: 'Wake up — before anything!'
+        }, {
+            id: 'w2',
+            time: '7:25 am',
+            ml: 300,
+            note: 'After run — before morning shake.'
+        }, {
+            id: 'w3',
+            time: '7:55 am',
+            ml: 200,
+            note: 'Before leaving for college bus.'
+        }, {
+            id: 'w4',
+            time: '10:30 am',
+            ml: 300,
+            note: 'College break — carry bottle!'
+        }, {
+            id: 'w5',
+            time: '1:00 pm',
+            ml: 250,
+            note: 'Before lunch. Seated, slow sips.'
+        }, {
+            id: 'w6',
+            time: '1:30 pm',
+            ml: 200,
+            note: 'After lunch. Wait 45 min gap.'
+        }, {
+            id: 'w7',
+            time: '6:00 pm',
+            ml: 200,
+            note: 'After reaching hostel.'
+        }, {
+            id: 'w8',
+            time: '7:45 pm',
+            ml: 200,
+            note: 'During or after hostel dinner.'
+        }, {
+            id: 'w9',
+            time: '9:55 pm',
+            ml: 300,
+            note: 'Last water before sleep!'
+        }, ];
+
+        const BREATHING = [{
+            id: 'b1',
+            icon: '🌀',
+            title: 'Anulom Vilom',
+            badge: '10 rounds · 3 mins',
+            color: '#67e8f9',
+            info: 'Sit cross-legged. Close RIGHT nostril — inhale LEFT 4 counts. Hold both 4 counts. Close LEFT — exhale RIGHT 4 counts. Repeat other side = 1 round. Do 10 rounds!',
+            benefit: 'Balances brain · Reduces anxiety · More oxygen · Perfect before run'
+        }, {
+            id: 'b2',
+            icon: '💨',
+            title: 'Kapalbhati',
+            badge: '3 sets × 30 exhales',
+            color: '#67e8f9',
+            info: 'Sit straight. Exhale SHARPLY through nose — stomach goes IN. Let inhale happen naturally. 30 exhales per set. Rest 30 sec between sets.',
+            benefit: 'Boosts growth hormone · Improves lung capacity · Clears energy channels'
+        }, {
+            id: 'b3',
+            icon: '📦',
+            title: 'Box Breathing',
+            badge: '5 rounds · before study',
+            color: '#67e8f9',
+            info: 'Inhale nose 4 counts → Hold 4 counts → Exhale mouth 4 counts → Hold empty 4 counts = 1 round. Do 5 rounds before every study session.',
+            benefit: 'Focus increases 40% · Stress drops · Brain fully activates'
+        }, ];
+        const HEIGHT_EX = [{
+            id: 'h1',
+            icon: '🏋️',
+            title: 'Dead Hang',
+            badge: '3 sets × 60 sec',
+            color: '#818cf8',
+            info: 'Find any bar. Hang both hands. RELAX whole body — let spine decompress fully. 3 sets 45-60 seconds each.',
+            benefit: 'Most important! +1-2cm in 3 months · Decompresses spine'
+        }, {
+            id: 'h2',
+            icon: '🧍',
+            title: 'Tadasana',
+            badge: '3 × 1 min',
+            color: '#818cf8',
+            info: 'Stand straight feet together. Rise on toes. Stretch both arms UP — fingers interlocked. Look up. Hold 1 minute. Repeat 3 times.',
+            benefit: 'Full body lengthening · Instant 1-2cm from posture alone'
+        }, {
+            id: 'h3',
+            icon: '🐍',
+            title: 'Bhujangasana',
+            badge: '3 × 30 sec',
+            color: '#818cf8',
+            info: 'Lie on stomach. Palms near chest. Press — lift chest up. Keep hips on floor. Arch spine. Hold 30 sec. Repeat.',
+            benefit: 'Opens vertebrae · Direct spine lengthening effect'
+        }, {
+            id: 'h4',
+            icon: '🔄',
+            title: 'Chakrasana',
+            badge: '3 × 20 sec',
+            color: '#818cf8',
+            info: 'Lie on back. Bend knees. Palms near ears. Press up — arch body into bridge. Hold 20 sec. Repeat 3 times.',
+            benefit: 'Maximum spine extension · Best pose for height'
+        }, {
+            id: 'h5',
+            icon: '🦘',
+            title: 'Skipping Rope',
+            badge: '300 jumps daily',
+            color: '#818cf8',
+            info: 'Buy simple rope Rs 100. Do 300 jumps after run. Start with sets of 50. Build to continuous 300.',
+            benefit: 'Stimulates growth plates open at 19 · Bone density increases'
+        }, ];
+        const MORNING_SHAKE = [{
+            name: 'Full fat milk',
+            amt: '250ml'
+        }, {
+            name: 'Banana (ripe)',
+            amt: '1 large'
+        }, {
+            name: 'Soaked badam (peeled)',
+            amt: '8 pieces'
+        }, {
+            name: 'Soaked chana',
+            amt: '1 tbsp'
+        }, {
+            name: 'Karjura (no seed)',
+            amt: '2 pieces'
+        }, {
+            name: 'Peanut butter',
+            amt: '1 heaped tsp'
+        }, {
+            name: 'Homemade tuppa',
+            amt: '½ tsp'
+        }, {
+            name: 'Pintolas oats',
+            amt: '2 tbsp'
+        }, ];
+        const SLEEP_ROUTINE = [{
+            id: 's1',
+            icon: '🐝',
+            title: 'Bhramari Pranayama',
+            badge: '7 rounds · 10:02pm',
+            color: '#818cf8',
+            info: 'Sit on bed. Close both ears with thumbs. Place fingers over eyes. Deep breath in. While exhaling make HMMMM sound. Feel vibration in skull. Do 7 rounds.',
+            benefit: 'Releases melatonin · Stops mental chatter · Better than sleep tablet'
+        }, {
+            id: 's2',
+            icon: '🌬️',
+            title: '4-7-8 Breathing',
+            badge: '4 rounds · 10:12pm',
+            color: '#818cf8',
+            info: 'Lie in bed. Inhale nose 4 counts. Hold 7 counts. Exhale slowly mouth 8 counts. Do ONLY 4 rounds.',
+            benefit: 'Activates vagus nerve · Deep sleep within 5 minutes'
+        }, {
+            id: 's3',
+            icon: '🧘',
+            title: 'Yoga Nidra',
+            badge: '10:15pm · fall asleep',
+            color: '#818cf8',
+            info: 'Lie flat Shavasana. Mentally relax each body part: right foot → leg → left foot → leg → hips → stomach → chest → arms → shoulders → neck → face → whole body heavy sinking.',
+            benefit: 'Most people sleep before reaching face · Full body recovery'
+        }, ];
+        const FACE_SECTIONS = [{
+            title: '🌅 Morning Wash · 5:55am · 3 mins',
+            color: '#f9a8d4',
+            steps: [{
+                step: 'Step 1',
+                action: 'Cold water 10 splashes',
+                detail: 'Splash cold hostel tap water 10 times on face. Closes pores, reduces morning puffiness, activates blood circulation. What top heroes do every morning!'
+            }, {
+                step: 'Step 2',
+                action: 'Turmeric + Milk mix',
+                detail: 'Pinch turmeric + 4-5 drops milk in palm. Mix. Apply gently on face circular motion 60 seconds. Focus on acne areas on cheeks.'
+            }, {
+                step: 'Step 3',
+                action: 'Cold wash + Pat dry',
+                detail: 'Wash off with cold water. PAT dry with clean cloth — never rub! Rubbing spreads acne bacteria to healthy skin.'
+            }],
+            donts: ['❌ Never hot water', '❌ Never rub with towel', '❌ Never apply anything immediately after']
+        }, {
+            title: '🏃 Post Run Wash · 7:25am · 2 mins',
+            color: '#4ade80',
+            steps: [{
+                step: 'Step 1',
+                action: '15 cold water splashes',
+                detail: 'After run face has sweat and dust. Cold water splash removes surface sweat before it dries and clogs pores.'
+            }, {
+                step: 'Step 2',
+                action: 'Crushed soaked chana scrub',
+                detail: 'Take 4-5 soaked chana from your overnight soak. Crush between fingers into rough paste. Apply on face gently circular motion 60 seconds. Natural scrub = same as Rs 500 face scrubs but FREE!'
+            }, {
+                step: 'Step 3',
+                action: 'Cold wash + air dry',
+                detail: 'Wash completely cold water. Pat with clean cloth. Let face breathe 5 minutes before shower.'
+            }],
+            donts: ['❌ Never skip after run — sweat on face = guaranteed acne', '❌ Do not press hard with chana — gentle only']
+        }, {
+            title: '☀️ Midday Protection · College · Free',
+            color: '#fbbf24',
+            steps: [{
+                step: 'Rule 1',
+                action: 'Never touch face with hands',
+                detail: 'Your hands touch books, desks, phones, doors all day. Every touch transfers thousands of bacteria directly onto your acne. Most acne spreading happens this way!'
+            }, {
+                step: 'Rule 2',
+                action: 'Wipe phone before calls',
+                detail: 'Phone screen has more bacteria than a toilet seat. Every call you press that screen on your cheek. Wipe on your shirt before every call!'
+            }, {
+                step: 'Rule 3',
+                action: 'Shield face from bus dust',
+                detail: 'College bus dust directly hits face. Use collar to shield near windows. Splash cold water immediately when you reach hostel!'
+            }],
+            donts: ['❌ Never pop pimples — creates permanent marks', '❌ Never wipe sweat with dirty cloth']
+        }, {
+            title: '🌙 Night Routine · Before Sleep · 5 mins',
+            color: '#a78bfa',
+            steps: [{
+                step: 'Step 1',
+                action: 'Cold water wash',
+                detail: 'Simple cold water splash to remove day dust, sweat, pollution. Never sleep without washing — 8 hours of bacteria on skin = more acne by morning.'
+            }, {
+                step: 'Step 2',
+                action: 'Turmeric + Milk mask 5 mins',
+                detail: 'Pinch turmeric + few drops milk = paste. Apply full face. Leave exactly 5 minutes. Wash with cold water. Pat dry. Turmeric kills bacteria while milk brightens and repairs.'
+            }, {
+                step: 'Step 3',
+                action: 'Tuppa on marks ONLY',
+                detail: '1 tiny drop homemade ghee. Dab ONLY on old acne marks — NOT whole face, NOT active pimples. Skin repairs 10pm-2am and tuppa accelerates overnight healing.'
+            }],
+            donts: ['❌ Never tuppa on active pimples — only on old marks', '❌ Never sleep with wet face', '❌ Never more than 1 tiny drop']
+        }, {
+            title: '📅 Weekly Deep Treatment · Sunday',
+            color: '#fb923c',
+            steps: [{
+                step: 'Step 1',
+                action: 'Besan + Turmeric + Milk mask',
+                detail: '1 tbsp besan + ¼ tsp turmeric + enough milk to make paste. Apply face. Leave 15 minutes. Wash cold water. Deep cleans pores, removes dead skin, brightens tone — used in Bollywood for decades!'
+            }, {
+                step: 'Step 2',
+                action: 'Chana paste full scrub',
+                detail: 'After mask, crush 8-10 soaked chana. Scrub full face gently circular 2 minutes. Removes dead skin that mask loosened. Wash cold water. Skin feels completely new!'
+            }, {
+                step: 'Step 3',
+                action: 'Rest face — no products',
+                detail: 'After Sunday treatment just cold water rest of day. Let skin breathe and recover. Maximum 1 deep treatment per week!'
+            }],
+            donts: ['❌ Never more than once a week', '❌ If skin irritated — reduce turmeric next time']
+        }, {
+            title: '🍽️ Diet for Clear Skin · Inside Out',
+            color: '#34d399',
+            steps: [{
+                step: 'Food 1',
+                action: 'Your eggs daily — keep!',
+                detail: '2-3 eggs daily gives collagen — protein that makes skin elastic and heals marks. Body uses egg protein to rebuild skin cells overnight.'
+            }, {
+                step: 'Food 2',
+                action: 'Soaked badam — keep!',
+                detail: 'Almonds give Vitamin E — most powerful skin vitamin. Heals acne marks from inside. Your soaked badam in shake already doing skin healing!'
+            }, {
+                step: 'Food 3',
+                action: 'Reduce oily hostel food',
+                detail: 'Hostel food is often oily and spicy. Oil and spice triggers sebaceous glands to produce more face oil = more acne. Drink extra water after oily meals.'
+            }, {
+                step: 'Food 4',
+                action: 'Water = best skin medicine',
+                detail: 'Your 2.5L daily water goal is literally the most powerful skin care routine. Well hydrated skin = no new marks, natural glow. Keep every water slot!'
+            }],
+            donts: ['❌ Avoid biscuits and packaged snacks — refined flour = acne food', '❌ Avoid sugary drinks — sugar spike = oil spike = acne spike']
+        }, {
+            title: '💤 Sleep = Free Skin Repair',
+            color: '#818cf8',
+            steps: [{
+                step: 'Fact 1',
+                action: '10pm-2am is skin golden hour',
+                detail: 'Maximum growth hormone and skin repair chemicals release during 10pm-2am. Sleeping at 10:15pm is more powerful than any face cream. Skin repairs itself FREE while you sleep!'
+            }, {
+                step: 'Fact 2',
+                action: 'Pillow hygiene matters',
+                detail: 'Hostel pillow collects sweat and oil every night. 7+ hours on it = rubbing bacteria on face repeatedly. Flip pillow to clean side every 3 days. Free and stops 30% of acne!'
+            }, {
+                step: 'Fact 3',
+                action: 'Back sleeping is best',
+                detail: 'Sleeping on stomach presses face into pillow for hours — clogs pores physically. Sleep on back in Shavasana. Your Yoga Nidra routine naturally puts you in correct position!'
+            }],
+            donts: ['❌ Never sleep after 11pm — skin repair window closes', '❌ Never sleep with unwashed face']
+        }, ];
+
+        const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        // ══ STATE ══════════════════════════════════════════════════════════
+        let ST = {
+            tab: 'today',
+            openPanel: '',
+            checked: {},
+            water: {},
+            subChecked: {},
+            faceChecked: {},
+            weight: 54,
+            wslots: [],
+            customHabits: [],
+            deletedDefaults: [],
+            user: null,
+            username: '',
+            notifEnabled: false,
+            notifScheduled: false
+        };
+
+        function tk() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        function save() {
+            try {
+                localStorage.setItem('mhv8', JSON.stringify({
+                    c: ST.checked,
+                    w: ST.water,
+                    sc: ST.subChecked,
+                    fc: ST.faceChecked,
+                    wt: ST.weight,
+                    ws: ST.wslots,
+                    ch: ST.customHabits,
+                    dd: ST.deletedDefaults,
+                    un: ST.username,
+                    ne: ST.notifEnabled
+                }));
+            } catch (e) {}
+        }
+
+        function load() {
+            try {
+                const d = JSON.parse(localStorage.getItem('mhv8') || '{}');
+                ST.checked = d.c || {};
+                ST.water = d.w || {};
+                ST.subChecked = d.sc || {};
+                ST.faceChecked = d.fc || {};
+                ST.weight = d.wt || 54;
+                ST.wslots = d.ws || (JSON.parse(JSON.stringify(DEFAULT_WSLOTS)));
+                ST.customHabits = d.ch || [];
+                ST.deletedDefaults = d.dd || [];
+                ST.username = d.un || '';
+                ST.notifEnabled = d.ne || false;
+            } catch (e) {
+                ST.wslots = JSON.parse(JSON.stringify(DEFAULT_WSLOTS));
+            }
+        }
+
+        // ══ AUTH ════════════════════════════════════════════════════════════
+        function loginWithGoogle() {
+            // Simulate Google login — in real deployment connect Firebase
+            const name = prompt('Enter your Google name (or any name):', 'Manjunath');
+            if (!name) return;
+            ST.username = name.trim();
+            save();
+            showApp();
+        }
+
+        function loginAsGuest() {
+            document.getElementById('username-modal').classList.add('on');
+        }
+
+        function saveUsername() {
+            const val = document.getElementById('uname-input').value.trim();
+            ST.username = val || 'Champion';
+            save();
+            document.getElementById('username-modal').classList.remove('on');
+            showApp();
+        }
+
+        function showApp() {
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            document.getElementById('nav').classList.add('show');
+            document.getElementById('profile-btn').classList.add('show');
+            document.getElementById('profile-initial').textContent = (ST.username || 'U')[0].toUpperCase();
+            document.getElementById('notif-toggle-text').textContent = ST.notifEnabled ? 'Disable Notifications' : 'Enable Notifications';
+            render();
+            if (ST.notifEnabled) scheduleWaterNotifs();
+        }
+
+        function logout() {
+            if (!confirm('Logout? Your data stays saved!')) return;
+            document.getElementById('login-page').style.display = 'flex';
+            document.getElementById('app').style.display = 'none';
+            document.getElementById('nav').classList.remove('show');
+            document.getElementById('profile-btn').classList.remove('show');
+            toggleProfileMenu(true);
+        }
+
+        function editUsername() {
+            const n = prompt('Enter new name:', ST.username);
+            if (n && n.trim()) {
+                ST.username = n.trim();
+                save();
+                render();
+            }
+            toggleProfileMenu(true);
+        }
+
+        function toggleProfileMenu(forceClose) {
+            const m = document.getElementById('profile-menu');
+            if (forceClose) m.classList.remove('show');
+            else m.classList.toggle('show');
+        }
+        document.addEventListener('click', e => {
+            const btn = document.getElementById('profile-btn');
+            const menu = document.getElementById('profile-menu');
+            if (menu.classList.contains('show') && !menu.contains(e.target) && e.target !== btn) {
+                menu.classList.remove('show');
+            }
+        });
+
+        // ══ NOTIFICATIONS ═══════════════════════════════════════════════════
+        function toggleNotifications() {
+            if (ST.notifEnabled) {
+                ST.notifEnabled = false;
+                save();
+                document.getElementById('notif-toggle-text').textContent = 'Enable Notifications';
+                alert('Notifications disabled!');
+            } else {
+                requestNotifPermission();
+            }
+            toggleProfileMenu(true);
+        }
+
+        function requestNotifPermission() {
+            if ('Notification' in window) {
+                Notification.requestPermission().then(p => {
+                    if (p === 'granted') {
+                        ST.notifEnabled = true;
+                        save();
+                        document.getElementById('notif-toggle-text').textContent = 'Disable Notifications';
+                        scheduleWaterNotifs();
+                        showInAppNotif('🔔', 'Notifications enabled!', 'You will get water reminders at each slot time!');
+                    } else {
+                        alert('Please allow notifications in your browser settings for reminders to work!');
+                    }
+                });
+            } else {
+                // Fallback — in-app banner only
+                ST.notifEnabled = true;
+                save();
+                scheduleWaterNotifs();
+                showInAppNotif('🔔', 'In-app reminders enabled!', 'You will see water reminders at each slot time!');
+            }
+        }
+
+        function timeStrToToday(timeStr) {
+            const m = timeStr.match(/(\d+):(\d+)\s*(am|pm)/i);
+            if (!m) return null;
+            let h = parseInt(m[1]),
+                mn = parseInt(m[2]);
+            const ap = m[3].toLowerCase();
+            if (ap === 'pm' && h !== 12) h += 12;
+            if (ap === 'am' && h === 12) h = 0;
+            const d = new Date();
+            d.setHours(h, mn, 0, 0);
+            return d;
+        }
+
+        let notifTimers = [];
+
+        function scheduleWaterNotifs() {
+            notifTimers.forEach(t => clearTimeout(t));
+            notifTimers = [];
+            if (!ST.notifEnabled) return;
+            const now = new Date();
+            ST.wslots.forEach(slot => {
+                const t = timeStrToToday(slot.time);
+                if (!t) return;
+                const diff = t - now;
+                if (diff > 0 && diff < 24 * 60 * 60 * 1000) {
+                    const timer = setTimeout(() => {
+                        const wd = ST.water[tk()] || {};
+                        if (!wd[slot.id]) {
+                            fireNotif('💧', `Time to drink water! (${slot.time})`, `Drink ${slot.ml}ml — ${slot.note}`);
+                        }
+                    }, diff);
+                    notifTimers.push(timer);
+                }
+            });
+            // General habit reminder at 9pm if not all done
+            const ninepm = new Date();
+            ninepm.setHours(21, 0, 0, 0);
+            const diff9 = ninepm - now;
+            if (diff9 > 0) {
+                const t = setTimeout(() => {
+                    const remaining = allHabits().filter(h => !isDone(h.id)).length;
+                    if (remaining > 0) {
+                        fireNotif('🔥', `${remaining} habit${remaining>1?'s':''} still pending!`, 'Complete your habits before 10:15pm!');
+                    }
+                }, diff9);
+                notifTimers.push(t);
+            }
+        }
+
+        function fireNotif(icon, title, body) {
+            // System notification
+            if ('Notification' in window && Notification.permission === 'granted') {
+                try {
+                    new Notification(title, {
+                        body,
+                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🏆</text></svg>'
+                    });
+                } catch (e) {}
+            }
+            // Always show in-app banner too
+            showInAppNotif(icon, title, body);
+        }
+
+        let bannerTimer = null;
+
+        function showInAppNotif(icon, msg, sub) {
+            const b = document.getElementById('notif-banner');
+            document.getElementById('notif-ico').textContent = icon;
+            document.getElementById('notif-msg').textContent = msg;
+            document.getElementById('notif-sub').textContent = sub;
+            b.classList.add('show');
+            if (bannerTimer) clearTimeout(bannerTimer);
+            bannerTimer = setTimeout(dismissNotif, 5000);
+        }
+
+        function dismissNotif() {
+            document.getElementById('notif-banner').classList.remove('show');
+        }
+
+        // ══ COMPUTED ════════════════════════════════════════════════════════
+        function allHabits() {
+            const filtered = DEFAULT_HABITS.filter(h => !ST.deletedDefaults.includes(h.id));
+            return [...filtered, ...ST.customHabits];
+        }
+
+        function wMl() {
+            return ST.wslots.filter(s => (ST.water[tk()] || {})[s.id]).reduce((a, s) => a + s.ml, 0);
+        }
+
+        function wCount() {
+            return ST.wslots.filter(s => (ST.water[tk()] || {})[s.id]).length;
+        }
+
+        function wTotal() {
+            return ST.wslots.reduce((a, s) => a + s.ml, 0);
+        }
+
+        function wPct() {
+            const t = wTotal();
+            return t > 0 ? Math.min(100, Math.round((wMl() / t) * 100)) : 0;
+        }
+
+        function isDone(hid, day) {
+            day = day || tk();
+            const sc = ST.subChecked[day] || {};
+            const fc = ST.faceChecked[day] || {};
+            if (hid === 'water') return ST.wslots.length > 0 && ST.wslots.every(s => (ST.water[day] || {})[s.id]);
+            if (hid === 'breathing') return BREATHING.every(b => sc['b_' + b.id]);
+            if (hid === 'height') return HEIGHT_EX.every(h => sc['h_' + h.id]);
+            if (hid === 'shake') return !!sc['shake_morning'];
+            if (hid === 'face') return FACE_SECTIONS.every((_, i) => fc['fs_' + i]);
+            if (hid === 'sleep') return SLEEP_ROUTINE.every(s => sc['sl_' + s.id]);
+            return !!(ST.checked[day] || {})[hid];
+        }
+
+        function doneToday() {
+            return allHabits().filter(h => isDone(h.id)).length;
+        }
+
+        function dayPct() {
+            return Math.round((doneToday() / Math.max(1, allHabits().length)) * 100);
+        }
+
+        function streak(hid) {
+            let s = 0,
+                d = new Date();
+            d.setDate(d.getDate() - 1);
+            for (let i = 0; i < 365; i++) {
+                const k = d.toISOString().split('T')[0];
+                if (isDone(hid, k)) {
+                    s++;
+                    d.setDate(d.getDate() - 1);
+                } else break;
+            }
+            return s;
+        }
+
+        function avgStreak() {
+            return Math.round(allHabits().reduce((a, h) => a + streak(h.id), 0) / Math.max(1, allHabits().length));
+        }
+
+        function weightPct() {
+            return Math.max(0, Math.round(((ST.weight - 54) / (60 - 54)) * 100));
+        }
+
+        // ══ SVG RING ════════════════════════════════════════════════════════
+        function ring(pct, color, sz, sw) {
+            sz = sz || 72;
+            sw = sw || 6;
+            const r = (sz - sw * 2) / 2,
+                c = 2 * Math.PI * r,
+                off = c - (pct / 100) * c;
+            return `<svg width="${sz}" height="${sz}" class="svgr"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="#ffffff08" stroke-width="${sw}"/><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-dasharray="${c.toFixed(2)}" stroke-dashoffset="${off.toFixed(2)}" stroke-linecap="round" style="transition:stroke-dashoffset .5s ease"/></svg>`;
+        }
+
+        // ══ ACTIONS ═════════════════════════════════════════════════════════
+        function tapHabit(hid) {
+            const expandTypes = ['water', 'breathing', 'height', 'shake', 'face', 'sleep'];
+            if (expandTypes.includes(hid)) {
+                ST.openPanel = ST.openPanel === hid ? '' : hid;
+                render();
+                return;
+            }
+            const d = tk();
+            if (!ST.checked[d]) ST.checked[d] = {};
+            ST.checked[d][hid] = !ST.checked[d][hid];
+            save();
+            render();
+            tryParty();
+        }
+
+        function tapSub(key) {
+            const d = tk();
+            if (!ST.subChecked[d]) ST.subChecked[d] = {};
+            ST.subChecked[d][key] = !ST.subChecked[d][key];
+            save();
+            render();
+            tryParty();
+        }
+
+        function tapFace(key) {
+            const d = tk();
+            if (!ST.faceChecked[d]) ST.faceChecked[d] = {};
+            ST.faceChecked[d][key] = !ST.faceChecked[d][key];
+            save();
+            render();
+            tryParty();
+        }
+
+        function tapWater(sid) {
+            const d = tk();
+            if (!ST.water[d]) ST.water[d] = {};
+            ST.water[d][sid] = !ST.water[d][sid];
+            save();
+            render();
+            tryParty();
+        }
+
+        function deleteHabit(hid, isCustom) {
+            if (!confirm('Remove this habit?')) return;
+            if (isCustom) ST.customHabits = ST.customHabits.filter(h => h.id !== hid);
+            else ST.deletedDefaults.push(hid);
+            save();
+            render();
+        }
+
+        function deleteWslot(sid) {
+            ST.wslots = ST.wslots.filter(s => s.id !== sid);
+            save();
+            render();
+        }
+
+        function addWslot() {
+            const time = document.getElementById('wadd-time').value.trim();
+            const ml = parseInt(document.getElementById('wadd-ml').value) || 200;
+            const note = document.getElementById('wadd-note').value.trim() || 'Custom slot';
+            if (!time) {
+                showInAppNotif('⚠️', 'Please enter a time!', 'e.g. 3:00 pm');
+                return;
+            }
+            const id = 'wc_' + Date.now();
+            ST.wslots.push({
+                id,
+                time,
+                ml,
+                note
+            });
+            ST.wslots.sort((a, b) => {
+                const toM = t => {
+                    const m = t.match(/(\d+):(\d+)\s*(am|pm)/i);
+                    if (!m) return 0;
+                    let h = parseInt(m[1]),
+                        mn = parseInt(m[2]);
+                    if (m[3].toLowerCase() === 'pm' && h !== 12) h += 12;
+                    if (m[3].toLowerCase() === 'am' && h === 12) h = 0;
+                    return h * 60 + mn;
+                };
+                return toM(a.time) - toM(b.time);
+            });
+            save();
+            render();
+            if (ST.notifEnabled) scheduleWaterNotifs();
+            showInAppNotif('💧', 'Water slot added!', `${time} — ${ml}ml added and sorted!`);
+        }
+
+        function updateWeight(val) {
+            ST.weight = parseFloat(val) || 54;
+            save();
+            render();
+        }
+
+        function tryParty() {
+            if (doneToday() === allHabits().length) {
+                document.getElementById('cel').classList.add('on');
+                setTimeout(() => document.getElementById('cel').classList.remove('on'), 4500);
+            }
+        }
+
+        function goTab(t) {
+            ST.tab = t;
+            ST.openPanel = '';
+            ['today', 'weekly', 'guide'].forEach(x => document.getElementById('nb-' + x).classList.toggle('on', x === t));
+            render();
+            document.getElementById('app').scrollTop = 0;
+        }
+
+        function openModal() {
+            document.getElementById('modal-bg').classList.add('on');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-bg').classList.remove('on');
+        }
+
+        function saveNewHabit() {
+            const name = document.getElementById('modal-name').value.trim();
+            const icon = document.getElementById('modal-icon').value.trim() || '⭐';
+            const sub = document.getElementById('modal-sub').value.trim() || 'Daily habit';
+            const color = document.getElementById('modal-color').value;
+            if (!name) {
+                showInAppNotif('⚠️', 'Enter a habit name!', '');
+                return;
+            }
+            ST.customHabits.push({
+                id: 'custom_' + Date.now(),
+                label: name,
+                sub,
+                icon,
+                color,
+                type: 'check',
+                canDelete: true
+            });
+            save();
+            closeModal();
+            render();
+            document.getElementById('modal-name').value = '';
+            document.getElementById('modal-icon').value = '';
+            document.getElementById('modal-sub').value = '';
+        }
+
+        // ══ RENDER ══════════════════════════════════════════════════════════
+        function render() {
+            const app = document.getElementById('app');
+            if (ST.tab === 'today') app.innerHTML = renderToday();
+            if (ST.tab === 'weekly') app.innerHTML = renderWeekly();
+            if (ST.tab === 'guide') app.innerHTML = renderGuide();
+        }
+
+        function renderExpandPanel(items, prefix, color, footer) {
+            const sc = ST.subChecked[tk()] || {};
+            let o = '';
+            items.forEach(item => {
+                const key = prefix + item.id,
+                    done = !!sc[key];
+                o += `<div class="panel-row">
       <div style="font-size:20px;flex-shrink:0;margin-top:2px">${item.icon}</div>
       <div style="flex:1">
         <div style="font-size:13px;font-weight:800;color:#c8c8e8;margin-bottom:3px">${item.title}</div>
@@ -516,30 +2252,32 @@ function renderExpandPanel(items,prefix,color,footer){
       </div>
       <div class="panel-chk${done?' done':''}" style="--hc2:${item.color}" onclick="event.stopPropagation();tapSub('${key}')">${done?'✓':''}</div>
     </div>`;
-  });
-  o+=`<div style="padding:10px 16px;border-top:1px solid var(--border);background:${color}08"><p style="font-size:12px;color:${color}70;font-weight:600">${footer}</p></div>`;
-  return o;
-}
- 
-// ─── TODAY ────────────────────────────────────────────────────────
-function renderToday(){
-  const dp=dayPct(),done=doneToday(),as=avgStreak();
-  const hr=new Date().getHours();
-  const gr=hr<9?'Rise & Grind ☀️':hr<12?'Good Morning 🌅':hr<17?'Good Afternoon 🌤️':'Good Evening 🌙';
-  const habits=allHabits();
- 
-  let o=`<div class="hdr up">
+            });
+            o += `<div style="padding:10px 16px;border-top:1px solid var(--border);background:${color}08"><p style="font-size:12px;color:${color}70;font-weight:600">${footer}</p></div>`;
+            return o;
+        }
+
+        // ─── TODAY ────────────────────────────────────────────────────────
+        function renderToday() {
+            const dp = dayPct(),
+                done = doneToday(),
+                as = avgStreak();
+            const hr = new Date().getHours();
+            const gr = hr < 5 ? 'Good Night 🌙' : hr < 9 ? 'Rise & Grind ☀️' : hr < 12 ? 'Good Morning 🌅' : hr < 17 ? 'Good Afternoon 🌤️' : 'Good Evening 🌙';
+            const name = ST.username || 'Champion';
+            const habits = allHabits();
+            const notifEnabled = ST.notifEnabled;
+
+            let o = `<div class="hdr up">
     <p class="eyebrow">Hostel · Student · Mysuru</p>
-    <h1 class="pg-title">${gr}, Manjunath! 💪</h1>
+    <h1 class="pg-title">${gr}, ${name}! 💪</h1>
   </div>
- 
-  <!-- KDB QUOTE -->
+
   <div class="kdb-quote up">
     <p class="kdb-quote-text">"Hardwork can bites the talent"</p>
     <p class="kdb-quote-by">— KDB</p>
   </div>
- 
-  <!-- PROGRESS -->
+
   <div class="pcrd up">
     <div style="position:relative;width:74px;height:74px;flex-shrink:0">
       ${ring(dp,'#a78bfa',74,7)}
@@ -558,8 +2296,7 @@ function renderToday(){
       <div style="font-size:10px;color:var(--muted);font-weight:700">streak</div>
     </div>
   </div>
- 
-  <!-- WEIGHT -->
+
   <div class="wtcrd up">
     <div style="font-size:32px">⚖️</div>
     <div class="wtbar-wrap">
@@ -577,36 +2314,39 @@ function renderToday(){
   </div>
   <div style="padding:6px 16px 0">
     <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px">
-      <span style="font-size:12px;color:var(--muted);font-weight:700">Update weight:</span>
+      <span style="font-size:12px;color:var(--muted);font-weight:700">Weight:</span>
       <input type="number" step="0.1" min="54" max="70" value="${ST.weight}" onchange="updateWeight(this.value)"
         style="background:#1a1a2e;border:1px solid var(--border);border-radius:8px;padding:5px 10px;color:#4ade80;font-size:14px;font-weight:800;width:80px;font-family:'Nunito',sans-serif;"/>
       <span style="font-size:12px;color:var(--muted);font-weight:700">kg</span>
     </div>
   </div>
- 
-  <!-- HABITS SECTION WITH KDB QUOTE AND ADD BUTTON -->
+
+  ${!notifEnabled?`<div class="notif-card up">
+    <span style="font-size:28px">🔔</span>
+    <div class="notif-card-text"><strong>Enable Water Reminders</strong>Get notified at each water slot time + habit reminder at 9pm!</div>
+    <button class="notif-allow-btn" onclick="requestNotifPermission()">Enable</button>
+  </div>`:''}
+
   <div class="sec up">
     <div class="stitle-row">
       <span class="stitle">Tap any habit ↓</span>
-      <button onclick="openModal()" style="background:#a78bfa20;border:1px solid #a78bfa50;border-radius:20px;padding:5px 12px;color:#a78bfa;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:4px;">
-        ＋ Add Habit
-      </button>
+      <button onclick="openModal()" style="background:#a78bfa20;border:1px solid #a78bfa50;border-radius:20px;padding:5px 12px;color:#a78bfa;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;">＋ Add Habit</button>
     </div>`;
- 
+
   habits.forEach(h=>{
     const done=isDone(h.id),s=streak(h.id),isOpen=ST.openPanel===h.id;
     const sc=ST.subChecked[tk()]||{};
     const fc=ST.faceChecked[tk()]||{};
-    const isCustom=ST.customHabits.find(ch=>ch.id===h.id);
- 
+    const isCustom=!!ST.customHabits.find(ch=>ch.id===h.id);
+
     let subText=h.sub;
     if(h.id==='water') subText=`${wMl()}ml / ${wTotal()}ml · ${wCount()}/${ST.wslots.length} slots`;
     else if(h.id==='breathing'){const n=BREATHING.filter(b=>sc['b_'+b.id]).length;subText=`${n}/${BREATHING.length} exercises done`;}
     else if(h.id==='height'){const n=HEIGHT_EX.filter(x=>sc['h_'+x.id]).length;subText=`${n}/${HEIGHT_EX.length} exercises done`;}
     else if(h.id==='shake') subText=sc['shake_morning']?'✓ Morning shake done!':'Pending · 7:25am · anabolic window!';
     else if(h.id==='face'){const n=FACE_SECTIONS.filter((_,i)=>fc['fs_'+i]).length;subText=`${n}/${FACE_SECTIONS.length} sections done`;}
-    else if(h.id==='sleep'){const n=SLEEP_ROUTINE.filter(s=>sc['sl_'+s.id]).length;subText=`${n}/${SLEEP_ROUTINE.length} done`;}
- 
+    else if(h.id==='sleep'){const n=SLEEP_ROUTINE.filter(sl=>sc['sl_'+sl.id]).length;subText=`${n}/${SLEEP_ROUTINE.length} done`;}
+
     o+=`<div class="hcrd${done?' done':''}" style="--hc:${h.color}" onclick="tapHabit('${h.id}')">
       <div class="hico" style="${done?`background:${h.color}22;border-color:${h.color}`:''}">  ${h.icon}</div>
       <div class="hmeta">
@@ -614,7 +2354,8 @@ function renderToday(){
         <p class="hsub">${subText}</p>
         ${s>0?`<p class="hstrk">🔥 ${s} day streak</p>`:''}
       </div>`;
- 
+
+    // RIGHT SIDE CONTROLS
     if(h.id==='water'){
       const wp=wPct();
       o+=`<div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0">
@@ -627,15 +2368,19 @@ function renderToday(){
         <span style="font-size:9px;color:var(--muted);font-weight:800">${isOpen?'▲ CLOSE':'▼ OPEN'}</span>
       </div>`;
     } else if(['breathing','height','shake','face','sleep'].includes(h.id)){
-      o+=`<span class="expand-hint">${isOpen?'▲ CLOSE':'▼ OPEN'}</span>`;
+      o+=`<div style="display:flex;align-items:center;gap:6px">
+        <div class="del-btn" onclick="event.stopPropagation();deleteHabit('${h.id}',${isCustom})">🗑️</div>
+        <span class="expand-hint">${isOpen?'▲':'▼'}</span>
+      </div>`;
     } else {
-      o+=`<div style="display:flex;align-items:center;gap:6px">`;
-      if(isCustom) o+=`<div onclick="event.stopPropagation();deleteCustomHabit('${h.id}')" style="width:24px;height:24px;border-radius:8px;background:#ff4d4d15;border:1px solid #ff4d4d30;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px">🗑️</div>`;
-      o+=`<div class="hchk">${done?'✓':''}</div></div>`;
+      o+=`<div style="display:flex;align-items:center;gap:6px">
+        <div class="del-btn" onclick="event.stopPropagation();deleteHabit('${h.id}',${isCustom})">🗑️</div>
+        <div class="hchk">${done?'✓':''}</div>
+      </div>`;
     }
     o+=`</div>`;
- 
-    // ── WATER EXPAND WITH ADD/DELETE ──────────────────────────────
+
+    // WATER EXPAND
     if(h.id==='water'&&isOpen){
       const wd=ST.water[tk()]||{};
       o+=`<div class="wslots">
@@ -643,9 +2388,7 @@ function renderToday(){
           <span style="font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:800">${ST.wslots.length} Slots · ${wTotal()}ml Goal</span>
           <span class="pill" style="background:#38bdf820;color:#38bdf8">${wMl()}ml done</span>
         </div>`;
-      if(ST.wslots.length===0){
-        o+=`<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;font-weight:600">No slots yet! Add one below 👇</div>`;
-      }
+      if(ST.wslots.length===0) o+=`<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;font-weight:600">No slots yet! Add one below 👇</div>`;
       ST.wslots.forEach(sl=>{
         const sd=!!(wd[sl.id]);
         o+=`<div class="wslot${sd?' done':''}">
@@ -657,222 +2400,126 @@ function renderToday(){
           <div class="wdel" onclick="event.stopPropagation();deleteWslot('${sl.id}')">🗑️</div>
         </div>`;
       });
-      // ADD NEW SLOT FORM
       o+=`<div class="wadd-form">
-        <p style="font-size:11px;color:#38bdf8;font-weight:800;margin-bottom:8px;letter-spacing:.05em">➕ ADD NEW WATER SLOT</p>
+        <p style="font-size:11px;color:#38bdf8;font-weight:800;margin-bottom:8px">➕ ADD NEW WATER SLOT</p>
         <div class="wadd-row">
           <input class="wadd-input" id="wadd-time" placeholder="Time e.g. 3:00 pm" onclick="event.stopPropagation()"/>
-          <input class="wadd-input" id="wadd-ml" type="number" placeholder="ml e.g. 250" style="width:100px;flex:none" onclick="event.stopPropagation()"/>
+          <input class="wadd-input" id="wadd-ml" type="number" placeholder="ml" style="width:90px;flex:none" onclick="event.stopPropagation()"/>
         </div>
         <div class="wadd-row">
           <input class="wadd-input" id="wadd-note" placeholder="Note e.g. Before lunch" onclick="event.stopPropagation()"/>
           <button class="wadd-btn" onclick="event.stopPropagation();addWslot()">Add ＋</button>
         </div>
-        <p class="wadd-hint">💡 Type time like: 8:30 am or 2:00 pm · Slots auto-sort by time</p>
+        <p style="font-size:11px;color:#38bdf870;font-weight:600">💡 Type time like: 8:30 am or 2:00 pm · Auto-sorts by time!</p>
       </div>
       <div style="padding:10px 16px;border-top:1px solid var(--border);background:#38bdf808">
         <p style="font-size:12px;color:#38bdf870;font-weight:600">💡 Always <strong style="color:#38bdf8">sit</strong> to drink. Sip slowly. Room temp water. Max 300ml at once!</p>
       </div></div>`;
     }
- 
-    // ── BREATHING ─────────────────────────────────────────────────
-    if(h.id==='breathing'&&isOpen){
-      o+=`<div class="expand-panel"><div class="panel-hdr"><span class="panel-hdr-lbl">🌬️ Breathing · 6:05am</span></div>`;
-      o+=renderExpandPanel(BREATHING,'b_','#67e8f9','💡 Do Anulom Vilom + Kapalbhati BEFORE run at 6:05am. Box breathing before every study session!');
-      o+=`</div>`;
-    }
- 
-    // ── HEIGHT ────────────────────────────────────────────────────
-    if(h.id==='height'&&isOpen){
-      o+=`<div class="expand-panel"><div class="panel-hdr"><span class="panel-hdr-lbl">📏 Height · After Run</span><span class="pill" style="background:#818cf820;color:#818cf8">+5–9cm possible</span></div>`;
-      o+=renderExpandPanel(HEIGHT_EX,'h_','#818cf8','💡 Dead hang EVERY day without fail. Buy Rs 100 skipping rope this week. 6 months consistent = real results!');
-      o+=`</div>`;
-    }
- 
-    // ── SHAKE ─────────────────────────────────────────────────────
+    if(h.id==='breathing'&&isOpen){o+=`<div class="expand-panel"><div class="panel-hdr"><span class="panel-hdr-lbl">🌬️ Breathing · 6:05am</span></div>`;o+=renderExpandPanel(BREATHING,'b_','#67e8f9','💡 Anulom Vilom + Kapalbhati BEFORE run. Box breathing before every study session!');o+=`</div>`;}
+    if(h.id==='height'&&isOpen){o+=`<div class="expand-panel"><div class="panel-hdr"><span class="panel-hdr-lbl">📏 Height · After Run</span><span class="pill" style="background:#818cf820;color:#818cf8">+5–9cm possible</span></div>`;o+=renderExpandPanel(HEIGHT_EX,'h_','#818cf8','💡 Dead hang EVERY day. Buy Rs 100 rope this week. 6 months = real results!');o+=`</div>`;}
     if(h.id==='shake'&&isOpen){
       const mDone=!!(ST.subChecked[tk()]||{})['shake_morning'];
-      o+=`<div class="expand-panel">
-        <div class="panel-hdr">
-          <span class="panel-hdr-lbl">🌅 Morning Shake · 7:25am · 520 cal</span>
-          <div class="panel-chk${mDone?' done':''}" style="--hc2:#f472b6;border-radius:50%;cursor:pointer" onclick="event.stopPropagation();tapSub('shake_morning')">${mDone?'✓':''}</div>
-        </div>`;
-      MORNING_SHAKE.forEach(i=>{
-        o+=`<div class="panel-row"><span style="font-size:13px;font-weight:700;color:#c8c8e8;flex:1">${i.name}</span><span style="font-size:12px;color:var(--muted);font-weight:600">${i.amt}</span></div>`;
-      });
-      o+=`<div style="padding:10px 16px;border-top:1px solid var(--border);background:#f472b608">
-        <p style="font-size:12px;color:#f472b870;font-weight:600">💡 Blend 45 sec · Sit down to drink · Sip 8-10 mins · Wait 20 mins before eggs · Room temp milk!</p>
-      </div></div>`;
+      o+=`<div class="expand-panel"><div class="panel-hdr"><span class="panel-hdr-lbl">🌅 Morning Shake · 7:25am · 520 cal</span><div class="panel-chk${mDone?' done':''}" style="--hc2:#f472b6;border-radius:50%;cursor:pointer" onclick="event.stopPropagation();tapSub('shake_morning')">${mDone?'✓':''}</div></div>`;
+      MORNING_SHAKE.forEach(i=>{o+=`<div class="panel-row"><span style="font-size:13px;font-weight:700;color:#c8c8e8;flex:1">${i.name}</span><span style="font-size:12px;color:var(--muted);font-weight:600">${i.amt}</span></div>`;});
+      o+=`<div style="padding:10px 16px;border-top:1px solid var(--border);background:#f472b608"><p style="font-size:12px;color:#f472b870;font-weight:600">💡 Blend 45 sec · Sit to drink · Sip 8-10 mins · Wait 20 mins before eggs · Room temp milk!</p></div></div>`;
     }
- 
-    // ── FACE — DETAILED ───────────────────────────────────────────
     if(h.id==='face'&&isOpen){
       const fc2=ST.faceChecked[tk()]||{};
-      o+=`<div class="expand-panel">
-        <div class="panel-hdr"><span class="panel-hdr-lbl">✨ Face Guide · Zero Cost · Full Routine</span></div>`;
+      o+=`<div class="expand-panel"><div class="panel-hdr"><span class="panel-hdr-lbl">✨ Full Face Guide · Zero Cost</span></div>`;
       FACE_SECTIONS.forEach((sec,i)=>{
-        const fkey='fs_'+i;
-        const secDone=!!fc2[fkey];
-        o+=`<div style="border-bottom:1px solid var(--border)">
-          <div style="padding:12px 16px 10px;display:flex;align-items:center;gap:10px;cursor:pointer" onclick="event.stopPropagation();tapFace('${fkey}')">
-            <div style="flex:1">
-              <div style="font-size:13px;font-weight:900;color:${sec.color};margin-bottom:2px">${sec.title}</div>
-            </div>
-            <div class="panel-chk${secDone?' done':''}" style="--hc2:${sec.color}">${secDone?'✓':''}</div>
-          </div>`;
-        sec.steps.forEach(st=>{
-          o+=`<div style="padding:8px 16px 8px 20px;border-top:1px solid #1a1a2815">
-            <div style="font-size:11px;font-weight:800;color:${sec.color};margin-bottom:3px">${st.step} — ${st.action}</div>
-            <div style="font-size:11px;color:var(--muted);line-height:1.6;font-weight:600">${st.detail}</div>
-          </div>`;
-        });
-        if(sec.donts&&sec.donts.length){
-          o+=`<div style="padding:8px 16px 12px 20px">`;
-          sec.donts.forEach(d=>{
-            o+=`<div style="font-size:11px;color:#ff6b6b90;font-weight:700;line-height:1.8">${d}</div>`;
-          });
-          o+=`</div>`;
-        }
+        const fkey='fs_'+i,secDone=!!fc2[fkey];
+        o+=`<div style="border-bottom:1px solid var(--border)"><div style="padding:12px 16px 10px;display:flex;align-items:center;gap:10px;cursor:pointer" onclick="event.stopPropagation();tapFace('${fkey}')"><div style="flex:1"><div style="font-size:13px;font-weight:900;color:${sec.color}">${sec.title}</div></div><div class="panel-chk${secDone?' done':''}" style="--hc2:${sec.color}">${secDone?'✓':''}</div></div>`;
+        sec.steps.forEach(st=>{o+=`<div style="padding:8px 16px 8px 20px;border-top:1px solid #1a1a2815"><div style="font-size:11px;font-weight:800;color:${sec.color};margin-bottom:3px">${st.step} — ${st.action}</div><div style="font-size:11px;color:var(--muted);line-height:1.6;font-weight:600">${st.detail}</div></div>`;});
+        if(sec.donts){o+=`<div style="padding:6px 16px 12px 20px">`;sec.donts.forEach(d=>{o+=`<div style="font-size:11px;color:#ff6b6b90;font-weight:700;line-height:1.8">${d}</div>`;});o+=`</div>`;}
         o+=`</div>`;
       });
-      o+=`<div style="padding:12px 16px;background:#f9a8d408;border-top:1px solid var(--border)">
-        <p style="font-size:12px;color:#f9a8d470;font-weight:600">💡 Zero cost · turmeric + milk + soaked chana + homemade tuppa. All from your existing stock. Consistency for 30 days = 70% acne cleared!</p>
-      </div></div>`;
+      o+=`<div style="padding:12px 16px;background:#f9a8d408;border-top:1px solid var(--border)"><p style="font-size:12px;color:#f9a8d470;font-weight:600">💡 Zero cost · turmeric + milk + chana + tuppa. Consistency 30 days = 70% acne cleared!</p></div></div>`;
     }
- 
-    // ── SLEEP ─────────────────────────────────────────────────────
-    if(h.id==='sleep'&&isOpen){
-      o+=`<div class="expand-panel"><div class="panel-hdr"><span class="panel-hdr-lbl">🌙 Sleep Protocol · 10:02pm</span></div>`;
-      o+=renderExpandPanel(SLEEP_ROUTINE,'sl_','#818cf8','💡 Phone DOWN at 10:00pm. Roll tissue as free earplugs for hostel noise. Write worries on paper before bed to clear mind!');
-      o+=`</div>`;
-    }
+    if(h.id==='sleep'&&isOpen){o+=`<div class="expand-panel"><div class="panel-hdr"><span class="panel-hdr-lbl">🌙 Sleep Protocol · 10:02pm</span></div>`;o+=renderExpandPanel(SLEEP_ROUTINE,'sl_','#818cf8','💡 Phone DOWN at 10:00pm. Roll tissue as free earplugs. Write worries on paper before bed!');o+=`</div>`;}
   });
- 
-  o+=`<div class="tip">
-    <p class="tip-lbl">🏆 Today's Full Stack</p>
-    <p class="tip-txt">🌬️ Breathe → 🏃 Run → 📏 Height → 🥛 Morning shake → ✨ Face wash → 📖 Study → 🗣️ Communicate → 🌊 Soak badam → 🌙 Sleep breathing<br><br>
-    <strong style="color:#a78bfa">"Hardwork can bites the talent" — KDB</strong><br>
-    Show up every day bro. The streak is proof of your character! 💪</p>
+
+  o+=`<div class="tip"><p class="tip-lbl">🏆 Today's Stack</p>
+    <p class="tip-txt">🌬️ Breathe → 🏃 Run → 📏 Height → 🥛 Shake → ✨ Face → 📖 Study → 🗣️ Communicate → 🌊 Soak → 🌙 Sleep<br><br>
+    <strong style="color:#a78bfa">"Hardwork can bites the talent" — KDB</strong></p>
   </div></div>`;
   return o;
 }
- 
-// ─── WEEKLY ───────────────────────────────────────────────────────
+
+// ─── WEEKLY ─────────────────────────────────────────────────────────
 function renderWeekly(){
   const today=new Date(),dayN=today.getDay(),todayStr=tk();
   const week=Array.from({length:7},(_,i)=>{const d=new Date(today);d.setDate(today.getDate()-dayN+i);return d;});
   const habits=allHabits();
   let o=`<div class="hdr up"><p class="eyebrow">This Week</p><h1 class="pg-title">Weekly Grid 📅</h1></div>
   <div class="wkwrap up"><table class="wktbl"><thead><tr><td style="width:75px"></td>`;
-  week.forEach(d=>{
-    const isT=d.toISOString().split('T')[0]===todayStr;
-    o+=`<td class="wkgh${isT?' tc':''}">${DAYS[d.getDay()]}<br>${d.getDate()}</td>`;
-  });
+  week.forEach(d=>{const isT=d.toISOString().split('T')[0]===todayStr;o+=`<td class="wkgh${isT?' tc':''}">${DAYS[d.getDay()]}<br>${d.getDate()}</td>`;});
   o+=`</tr></thead><tbody>`;
   habits.forEach(h=>{
     o+=`<tr><td class="wkgl">${h.icon} ${h.label.split(' ')[0]}</td>`;
-    week.forEach(d=>{
-      const dk=d.toISOString().split('T')[0],fut=dk>todayStr,done=isDone(h.id,dk);
-      o+=`<td style="text-align:center"><div class="dot${done?' done':''}${fut?' fut':''}" style="${done?`background:${h.color}`:''}">
-        ${done?'✓':fut?'':'·'}</div></td>`;
-    });
+    week.forEach(d=>{const dk=d.toISOString().split('T')[0],fut=dk>todayStr,done=isDone(h.id,dk);o+=`<td style="text-align:center"><div class="dot${done?' done':''}${fut?' fut':''}" style="${done?`background:${h.color}`:''}">  ${done?'✓':fut?'':'·'}</div></td>`;});
     o+=`</tr>`;
   });
   o+=`</tbody></table></div>
   <div style="margin:16px 16px 0;background:var(--card);border:1px solid #4ade8030;border-radius:18px;padding:16px;">
     <p style="font-size:13px;font-weight:800;color:#4ade80;margin-bottom:10px">⚖️ Weight Journey · 54kg → 60kg</p>
-    <div style="height:10px;background:#1a1a2e;border-radius:5px;overflow:hidden;margin-bottom:12px">
-      <div style="height:100%;width:${Math.max(2,weightPct())}%;background:linear-gradient(90deg,#4ade80,#fbbf24);border-radius:5px"></div>
-    </div>
+    <div style="height:10px;background:#1a1a2e;border-radius:5px;overflow:hidden;margin-bottom:12px"><div style="height:100%;width:${Math.max(2,weightPct())}%;background:linear-gradient(90deg,#4ade80,#fbbf24);border-radius:5px"></div></div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-      <div style="background:#1a1a2e;border-radius:10px;padding:10px;text-align:center">
-        <div style="font-size:18px;font-weight:900;color:#4ade80">${ST.weight}kg</div>
-        <div style="font-size:10px;color:var(--muted);font-weight:700">Current</div>
-      </div>
-      <div style="background:#1a1a2e;border-radius:10px;padding:10px;text-align:center">
-        <div style="font-size:18px;font-weight:900;color:#fbbf24">${(60-ST.weight).toFixed(1)}kg</div>
-        <div style="font-size:10px;color:var(--muted);font-weight:700">To Go</div>
-      </div>
-      <div style="background:#1a1a2e;border-radius:10px;padding:10px;text-align:center">
-        <div style="font-size:18px;font-weight:900;color:#a78bfa">${Math.ceil((60-ST.weight)/1.5)}</div>
-        <div style="font-size:10px;color:var(--muted);font-weight:700">Weeks Est.</div>
-      </div>
+      <div style="background:#1a1a2e;border-radius:10px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:900;color:#4ade80">${ST.weight}kg</div><div style="font-size:10px;color:var(--muted);font-weight:700">Current</div></div>
+      <div style="background:#1a1a2e;border-radius:10px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:900;color:#fbbf24">${(60-ST.weight).toFixed(1)}kg</div><div style="font-size:10px;color:var(--muted);font-weight:700">To Go</div></div>
+      <div style="background:#1a1a2e;border-radius:10px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:900;color:#a78bfa">${Math.ceil((60-ST.weight)/1.5)}</div><div style="font-size:10px;color:var(--muted);font-weight:700">Weeks Est.</div></div>
     </div>
   </div>
   <p class="stitle" style="padding:0 16px;margin-top:20px">Habit Streaks 🔥</p>
   <div class="sgrid up">`;
-  habits.forEach(h=>{
-    const s=streak(h.id);
-    o+=`<div class="scrd${s>0?' on':''}" style="--hc:${h.color}">
-      <div class="scico">${h.icon}</div>
-      <div class="scnm">${h.label.split(' ')[0]}</div>
-      <div class="scval">${s>0?'🔥 '+s:'—'}</div>
-      <div class="sclbl">day streak</div>
-    </div>`;
-  });
-  o+=`</div>`;
-  return o;
+  habits.forEach(h=>{const s=streak(h.id);o+=`<div class="scrd${s>0?' on':''}" style="--hc:${h.color}"><div class="scico">${h.icon}</div><div class="scnm">${h.label.split(' ')[0]}</div><div class="scval">${s>0?'🔥 '+s:'—'}</div><div class="sclbl">day streak</div></div>`;});
+  o+=`</div>`;return o;
 }
- 
-// ─── GUIDE ────────────────────────────────────────────────────────
+
+// ─── GUIDE ──────────────────────────────────────────────────────────
 function renderGuide(){
   let o=`<div class="hdr up"><p class="eyebrow">How To Use</p><h1 class="pg-title">Full Guide 🗺️</h1></div>
-  <p class="stitle" style="padding:0 16px">How Everything Works</p>`;
+  <p class="stitle" style="padding:0 16px">What's New</p>`;
   const steps=[
-    {e:'⚡',t:'Open TODAY tab every morning',b:'First thing at 5:55am. Your full day dashboard. Tick each habit as you complete it. Expandable cards show full step-by-step guides inside!'},
-    {e:'💧',t:'Water: Add + Delete your own slots',b:'Tap 💧 Water → expand → scroll down to see ADD NEW WATER SLOT form. Type your time, ml amount and note. Tap Add. To remove any slot tap the 🗑️ button. Slots auto-sort by time!'},
-    {e:'✨',t:'Face: 7 detailed sections inside',b:'Tap ✨ Face card → see 7 full sections: Morning, Post-run, Midday, Night, Weekly, Diet, Sleep. Each has exact steps + do\'s and don\'ts. Tick each section done!'},
-    {e:'➕',t:'Add your own custom habits',b:'Tap the purple "＋ Add Habit" button near the habits title. Enter name, icon, description and colour. Your custom habit appears in the list with a 🗑️ delete button!'},
-    {e:'💬',t:'KDB quote near habits section',b:'"Hardwork can bites the talent" by KDB appears right above your habits list every day as motivation. Your fuel to keep going!'},
-    {e:'📅',t:'Weekly grid shows full picture',b:'Tap 📅 Weekly to see colour grid of all 7 days + all habit streaks + weight journey progress bar. Updated automatically as you tick habits!'},
-    {e:'⚖️',t:'Update weight every Monday',b:'Find weight input on TODAY tab. Type your weight every Monday morning before eating. Watch 54→60kg bar fill up week by week!'},
+    {e:'🔐',t:'Login with Google or as Guest',b:'Open app → Login page → tap "Continue with Google" to sign in with your Google account. Or tap "Continue as Guest" to enter just your name. Your name appears in the greeting every day!'},
+    {e:'👤',t:'Profile button — top right corner',b:'See the circle button top right with your initial. Tap it to edit your name, enable/disable notifications, or logout. Your data stays saved even after logout!'},
+    {e:'🗑️',t:'Delete ANY habit — default or custom',b:'Every habit now has a 🗑️ delete button on the right side. Tap it to remove any habit — both the default built-in ones AND your custom added ones. Deleted defaults can be re-added by refreshing!'},
+    {e:'🔔',t:'Water notifications at exact slot time',b:'Tap Enable on the notification card in TODAY tab. You will get a notification at EACH water slot time reminding you to drink! Also a general reminder at 9pm if habits are pending.'},
+    {e:'💧',t:'Custom water slots add and delete',b:'Tap 💧 Water → scroll inside → add your own time slots with ml amount. Each slot has a 🗑️ delete button. Auto-sorts by time. Notifications scheduled for your custom slots too!'},
+    {e:'➕',t:'Add your own habits anytime',b:'Tap the purple "＋ Add Habit" button. Enter name, icon, colour. Your habit appears with a 🗑️ delete button. Fully persistent — saved forever on your phone!'},
   ];
-  steps.forEach(s=>{
-    o+=`<div class="gstep up"><div class="gsico">${s.e}</div>
-      <div><p class="gstitle">${s.t}</p><p class="gsbody">${s.b}</p></div></div>`;
-  });
+  steps.forEach(s=>{o+=`<div class="gstep up"><div class="gsico">${s.e}</div><div><p class="gstitle">${s.t}</p><p class="gsbody">${s.b}</p></div></div>`;});
   o+=`<div class="sched up">
-    <p class="schedt">⏰ Your Daily Schedule · Hostel · Mysuru</p>
-    <div class="srow">🌅<div><strong>5:55 am</strong> — Wake · 300ml water immediately</div></div>
+    <p class="schedt">⏰ Your Daily Schedule · ${ST.username||'Champion'}</p>
+    <div class="srow">🌅<div><strong>5:55 am</strong> — Wake · 300ml water sitting upright</div></div>
     <div class="srow">✨<div><strong>5:58 am</strong> — Morning face wash · turmeric + milk</div></div>
-    <div class="srow">🌬️<div><strong>6:05 am</strong> — Anulom Vilom 10 rounds + Kapalbhati 3×30</div></div>
-    <div class="srow">🏃<div><strong>6:10 am</strong> — 2km run · breathe 2:2 rhythm</div></div>
-    <div class="srow">📏<div><strong>7:10 am</strong> — Dead hang 3×60sec + height yoga poses</div></div>
+    <div class="srow">🌬️<div><strong>6:05 am</strong> — Anulom Vilom + Kapalbhati</div></div>
+    <div class="srow">🏃<div><strong>6:10 am</strong> — 2km run</div></div>
+    <div class="srow">📏<div><strong>7:10 am</strong> — Dead hang + height yoga</div></div>
     <div class="srow">🧘<div><strong>7:20 am</strong> — 10 min meditation</div></div>
     <div class="srow">🥛<div><strong>7:25 am</strong> — Morning shake · anabolic window!</div></div>
-    <div class="srow">✨<div><strong>7:35 am</strong> — Post run face wash · crushed soaked chana</div></div>
-    <div class="srow">🍳<div><strong>7:45 am</strong> — Breakfast · oats in milk · chew slowly!</div></div>
-    <div class="srow">🚌<div><strong>8:05 am</strong> — College bus · review notes</div></div>
-    <div class="srow">📚<div><strong>8:30–4:00 pm</strong> — College · 3 sessions · never touch face!</div></div>
-    <div class="srow">🥚<div><strong>5:20 pm</strong> — 3 boiled eggs after reaching hostel</div></div>
-    <div class="srow">📦<div><strong>6:05 pm</strong> — Box breathing 5 rounds before study</div></div>
-    <div class="srow">📖<div><strong>6:10–7:00 pm</strong> — Study block 1 · hardest subject</div></div>
-    <div class="srow">🍽️<div><strong>7:00–8:00 pm</strong> — Hostel dinner · eat slowly</div></div>
-    <div class="srow">📖<div><strong>8:00–10:00 pm</strong> — Study block 2 · revision</div></div>
-    <div class="srow">🗣️<div><strong>9:30 pm</strong> — Read aloud 10 mins · communication</div></div>
-    <div class="srow">🌊<div><strong>9:45 pm</strong> — Soak 18 badam + 3 tbsp chana in water!</div></div>
-    <div class="srow">✨<div><strong>9:50 pm</strong> — Night face routine · turmeric + milk + tuppa</div></div>
-    <div class="srow">💧<div><strong>9:55 pm</strong> — Last water · small sips only</div></div>
+    <div class="srow">🍳<div><strong>7:45 am</strong> — Breakfast · oats in milk</div></div>
+    <div class="srow">🚌<div><strong>8:05 am</strong> — College bus</div></div>
+    <div class="srow">📚<div><strong>8:30–4:00 pm</strong> — College · 3 sessions</div></div>
+    <div class="srow">🥚<div><strong>5:20 pm</strong> — 3 boiled eggs</div></div>
+    <div class="srow">📖<div><strong>6:10–10:00 pm</strong> — Study blocks</div></div>
+    <div class="srow">🌊<div><strong>9:45 pm</strong> — Soak badam + chana overnight!</div></div>
+    <div class="srow">✨<div><strong>9:50 pm</strong> — Night face routine</div></div>
     <div class="srow">🌙<div><strong>10:02 pm</strong> — Bhramari · 4-7-8 · Yoga Nidra</div></div>
     <div class="srow">😴<div><strong>10:15 pm</strong> — Sleep · non negotiable!</div></div>
-  </div>
-  <div class="rules up" style="border-color:#38bdf830;margin-bottom:20px">
-    <p class="rulest" style="color:#38bdf8">💧 Custom Water Slots Guide</p>
-    <p class="rulestxt">
-      ✅ Tap 💧 Water card to open slots<br>
-      ✅ Scroll down inside to find ADD form<br>
-      ✅ Type time like: <strong style="color:#38bdf8">8:30 am</strong> or <strong style="color:#38bdf8">2:00 pm</strong><br>
-      ✅ Add your ml amount and a short note<br>
-      ✅ Slots auto-sort by time automatically<br>
-      ✅ Tap 🗑️ on any slot to delete it<br>
-      ✅ Your custom slots save permanently!
-    </p>
   </div>`;
   return o;
 }
- 
-// ═══ BOOT ═════════════════════════════════════════════════════════
-load();render();
-</script>
+
+// ══ BOOT ════════════════════════════════════════════════════════════
+load();
+// Check if already logged in
+if(ST.username){
+  showApp();
+} else {
+  document.getElementById('login-page').style.display='flex';
+}
+    </script>
 </body>
+
 </html>
